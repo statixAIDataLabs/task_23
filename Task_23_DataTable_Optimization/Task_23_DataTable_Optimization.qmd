@@ -1,0 +1,408 @@
+---
+title: "Task 23: data.table Optimization"
+subtitle: "A practical introduction for clinical data programmers"
+author: "R Modernization Roadmap"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Start Here
+
+This project teaches practical ways to work efficiently with `data.table`. The examples use simulated ADSL-like subject data and ADLB-like lab data. They do not describe real people and must not be used for clinical decisions. Work from this project folder so file paths such as `data/synthetic_adsl.csv` resolve correctly. The matching lesson scripts are in `scripts/`.
+
+## Packages
+
+Use `data.table` for data work and `bench` only for benchmarking. Install them once in an R console. This code block is not executed during rendering.
+
+```{r}
+#| eval: false
+# Run manually in R when the packages are not installed.
+install.packages(
+  c("data.table", "bench"),
+  repos = "https://cloud.r-project.org/"
+)
+```
+
+`library()` loads a package for this R session. `fread()` reads a CSV into a data.table. `head()` displays the first rows and `dim()` reports the number of rows and columns.
+
+```{r}
+library(data.table)
+adsl <- fread("data/synthetic_adsl.csv")
+adlb <- fread("data/synthetic_adlb.csv")
+head(adsl)
+dim(adsl)
+head(adlb)
+dim(adlb)
+```
+
+Expected dimensions: 80 rows by 4 columns for ADSL, and 320 rows by 3 columns for ADLB. ADLB has several records per subject and includes a few missing `AVAL` values.
+
+# 1. Introduction to data.table
+
+`data.table` is an R package for selecting, changing, grouping, and joining tables. It extends `data.frame` and provides concise operations that can avoid unnecessary copies. A `data.frame` is R's standard rectangular data structure. A `data.table` is also rectangular, but its `:=` operator can update columns by reference, and its joins and grouped calculations are designed for efficient work.
+
+The common syntax is `DT[i, j, by]`: `i` chooses rows, `j` chooses or calculates columns, and `by` defines groups. `data.table()` creates a data.table from named vectors. `head()` displays its first rows. `str()` describes column names and data types. `dim()` returns row and column counts.
+
+```{r}
+small_dt <- data.table(
+  USUBJID = c("SUBJ-001", "SUBJ-002", "SUBJ-003"),
+  AGE = c(34, 67, 52),
+  TRT01A = c("Drug A", "Placebo", "Drug A")
+)
+head(small_dt)
+str(small_dt)
+dim(small_dt)
+```
+
+Expected: three rows and three columns; identifiers and treatment are character, and age is numeric. `setDT()` converts an existing data.frame into a data.table in place, so it changes the supplied object rather than making an independent table. `class()` reports the class names attached to an R object.
+
+```{r}
+small_df <- data.frame(
+  USUBJID = c("SUBJ-004", "SUBJ-005"), AGE = c(45, 70),
+  stringsAsFactors = FALSE
+)
+setDT(small_df)
+class(small_df)
+head(small_df)
+```
+
+# 2. Column operations and reducing copies
+
+The `:=` operator adds or modifies columns by reference. This updates the existing table instead of creating a full modified copy. `fifelse()` is data.table's fast, type-consistent conditional function. The age bands below are examples only, not a clinical standard. `copy()` makes a separate data.table when the original must stay unchanged.
+
+```{r}
+age_example <- copy(adsl)
+age_example[, AGEGR1 := fifelse(AGE < 40, "<40", "40+")]
+age_example[, AGE_NEXT_YEAR := AGE + 1]
+head(age_example[, .(USUBJID, AGE, AGEGR1, AGE_NEXT_YEAR)])
+```
+
+Line by line: copy ADSL so the source remains unchanged; add `AGEGR1` using the stated age condition; add a numeric next-year age; then display only the four named columns. `.()` is a short way to make the selected list of output columns.
+
+Ordinary base-R data.frame assignment follows copy-on-modify: changing the copy normally leaves the original alone. A second name for a data.table refers to the same table, so a `:=` update can be seen through either name. Use `copy()` before a reference update when you need to preserve the starting data.
+
+```{r}
+base_original <- as.data.frame(adsl)
+base_changed <- base_original
+base_changed$AGE[1] <- base_changed$AGE[1] + 1
+c(original = base_original$AGE[1], changed = base_changed$AGE[1])
+
+dt_original <- copy(adsl)
+dt_alias <- dt_original
+dt_original[, AGE := AGE + 1]
+c(changed = dt_original$AGE[1], alias_sees_change = dt_alias$AGE[1])
+
+safe_copy <- copy(adsl)
+safe_copy[, AGE := AGE + 1]
+c(original = adsl$AGE[1], copied_table = safe_copy$AGE[1])
+```
+
+Use `copy()` before modifying an input needed later or when creating a fair comparison. Avoid copying when an in-place update is safe. See [the column lesson](scripts/02_column_operations.R).
+
+# 3. Efficient filtering
+
+Filtering selects rows that meet conditions. In base R, the row condition goes before the comma and selected columns follow it. In data.table syntax the condition is also before the comma, and selected columns can be named inside `.()`.
+
+`all.equal()` compares results; `isTRUE()` gives a simple TRUE/FALSE answer; `stopifnot()` stops if the comparison fails. This makes the equivalence check executable rather than an assumption.
+
+```{r}
+adults_base <- as.data.frame(adsl)
+adults_base <- adults_base[adults_base$AGE >= 65,
+                           c("USUBJID", "AGE", "TRT01A")]
+adults_dt <- adsl[AGE >= 65, .(USUBJID, AGE, TRT01A)]
+stopifnot(isTRUE(all.equal(
+  adults_base, as.data.frame(adults_dt), check.attributes = FALSE
+)))
+head(adults_dt)
+```
+
+Expected: both methods return the same people and columns. `&` means “and”. `%chin%` checks character values against a list. `!is.na()` keeps non-missing values.
+
+```{r}
+drug_a <- adsl[TRT01A == "Drug A", .(USUBJID, AGE, SEX, TRT01A)]
+selected_labs <- adlb[PARAMCD %chin% c("ALT", "AST") & !is.na(AVAL)]
+older_drug_a <- adsl[AGE >= 65 & TRT01A == "Drug A"]
+c(drug_a_subjects = nrow(drug_a), selected_lab_rows = nrow(selected_labs),
+  older_drug_a = nrow(older_drug_a))
+```
+
+`nrow()` counts records. The project includes age, treatment, selected test, and multiple-condition filters in [the filtering lesson](scripts/03_filtering.R). Always check the rule and missing-value handling before considering speed.
+
+# 4. Grouping and summarization
+
+Grouping calculates a separate result for each category. `by` names the grouping variables. `.N` counts rows in the current group, while `uniqueN()` counts distinct values. Thus `.N` in ADLB counts lab rows, not people. `.()` creates named output columns. Since each ADSL row is one subject, `uniqueN(USUBJID)` explicitly counts subjects.
+
+```{r}
+subject_counts <- adsl[
+  , .(N_RECORDS = .N, N_SUBJECTS = uniqueN(USUBJID)), by = TRT01A
+]
+subject_counts[order(TRT01A)]
+```
+
+`order()` returns row positions in sorted order. `mean()`, `median()`, `min()`, and `max()` calculate numeric summaries. `na.rm = TRUE` skips missing values; `sum(!is.na(AVAL))` counts valid results. The following code summarizes each laboratory parameter.
+
+```{r}
+labs_by_parameter <- adlb[
+  , .(
+    N_RECORDS = .N,
+    N_VALID = sum(!is.na(AVAL)),
+    MEAN_AVAL = mean(AVAL, na.rm = TRUE),
+    MEDIAN_AVAL = median(AVAL, na.rm = TRUE),
+    MIN_AVAL = min(AVAL, na.rm = TRUE),
+    MAX_AVAL = max(AVAL, na.rm = TRUE)
+  ), by = PARAMCD
+]
+labs_by_parameter[order(PARAMCD)]
+```
+
+To summarize by treatment as well as parameter, first bring treatment onto each lab row with a join. Then `by = .(PARAMCD, TRT01A)` groups on both columns.
+
+```{r}
+lab_with_treatment <- adsl[adlb, on = "USUBJID"]
+labs_by_treatment <- lab_with_treatment[
+  , .(
+    N_RECORDS = .N,
+    N_VALID = sum(!is.na(AVAL)),
+    MEAN_AVAL = mean(AVAL, na.rm = TRUE),
+    MEDIAN_AVAL = median(AVAL, na.rm = TRUE),
+    MIN_AVAL = min(AVAL, na.rm = TRUE),
+    MAX_AVAL = max(AVAL, na.rm = TRUE)
+  ), by = .(PARAMCD, TRT01A)
+]
+labs_by_treatment[order(PARAMCD, TRT01A)]
+```
+
+`N_RECORDS` includes missing results; `N_VALID` does not. See [the grouping lesson](scripts/04_grouping_summary.R).
+
+# 5. Joins using data.table
+
+A join matches rows between two tables using shared identifier columns. ADSL has subject-level information; ADLB has repeated lab records. Joining adds age, sex, and treatment to each matched lab row. ADSL has one row per subject, while each subject has multiple ADLB rows. Repeated subject values in a join result are expected.
+
+Base R `merge()` combines matching rows; `all = FALSE` requests only matches. A data.table join has the form `X[i, on = "key"]`: it looks up each row of `i` in `X`. Thus `adsl[adlb, on = "USUBJID"]` starts from the lab records and adds matched subject columns.
+
+```{r}
+base_join <- merge(as.data.frame(adsl), as.data.frame(adlb),
+                   by = "USUBJID", all = FALSE)
+join_by_on <- adsl[adlb, on = "USUBJID"]
+head(join_by_on)
+c(base_rows = nrow(base_join), data_table_rows = nrow(join_by_on))
+```
+
+Expected: 320 rows, one for each matched ADLB row. The direction matters: `adsl[adlb]` starts from lab rows; reversing the tables changes which records drive the output.
+
+`setkey()` sorts a data.table by its key and records that ordering for lookups and joins. It changes the table by reference, so use `copy()` if the original order matters. `on` names join columns explicitly and is clear for a one-off join. A key can help with repeated lookups on the same column, but building one has a cost.
+
+```{r}
+adsl_keyed <- copy(adsl)
+setkey(adsl_keyed, USUBJID)
+keyed_join <- adsl_keyed[adlb, on = "USUBJID"]
+base_check <- as.data.table(base_join)
+dt_check <- copy(keyed_join)
+setorder(base_check, USUBJID, PARAMCD)
+setorder(dt_check, USUBJID, PARAMCD)
+stopifnot(isTRUE(all.equal(
+  as.data.frame(base_check), as.data.frame(dt_check), check.attributes = FALSE
+)))
+cat("Validated matched records:", nrow(dt_check), "\n")
+```
+
+`setorder()` sorts rows in place. The code sorts both outputs to a common order before comparing; it checks values, not just row counts. Join order and column order can differ between methods, so check both when downstream code depends on them.
+
+A left join keeps every row from its left table. In `merge()`, `all.x = TRUE` preserves unmatched rows in `x` and fills missing columns with `NA`. Duplicate keys can create several output rows for one input row. `rbind()` stacks rows from tables with the same columns. This small example adds a lab record with no subject match to show the behavior.
+
+```{r}
+left_join <- merge(as.data.frame(adsl), as.data.frame(adlb),
+                   by = "USUBJID", all.x = TRUE)
+lab_with_unmatched_id <- rbind(
+  as.data.frame(adlb),
+  data.frame(USUBJID = "SUBJ-NOT-IN-ADSL", PARAMCD = "ALT", AVAL = 22)
+)
+matched_only <- merge(as.data.frame(adsl), lab_with_unmatched_id,
+                      by = "USUBJID", all = FALSE)
+all_lab_rows <- merge(as.data.frame(adsl), lab_with_unmatched_id,
+                      by = "USUBJID", all.y = TRUE)
+c(left_join_rows = nrow(left_join), matched_rows = nrow(matched_only),
+  all_lab_rows = nrow(all_lab_rows))
+```
+
+The unmatched lab row is excluded by the inner join and retained by `all.y = TRUE`. `merge()` can sort rows and its output column order should be checked. See [the join lesson](scripts/05_datatable_joins.R).
+
+# 6. Practical clinical data transformation
+
+The end-to-end program reads both CSVs, keeps non-missing ALT and AST results, derives an age group, joins subject details to each lab row, summarizes by test/treatment/age group, and writes a CSV. `source()` runs an R script in the current session, and base R `read.csv()` reads a CSV file into a data.frame. `dir.create()` makes the output folder if needed. `write.csv()` exports a plain data.frame and avoids list-column CSV errors.
+
+```{r}
+source("scripts/06_clinical_data_transformation.R")
+read.csv("results/clinical_lab_summary.csv")
+```
+
+Expected: one row per observed parameter, treatment, and age-group combination, with record and subject counts plus mean, median, minimum, and maximum. The values come from the synthetic CSV inputs. The script can be run independently from the project root.
+
+# 7. Performance comparison
+
+## Verify before timing
+
+`bench::mark()` runs expressions repeatedly and measures time and memory. First compare equivalent results; only then time the same input data. `as.data.frame()` converts a table to base-R data.frame form, while `as.data.table()` converts it back. `rep()` repeats a sequence, `seq_len()` creates a sequence of row numbers, and `match()` finds each lab record's subject position. `sprintf()` formats unique synthetic subject IDs. The following code uses them to expand the seeded inputs to 80,000 subjects and 320,000 lab records. This remains simulated data. `aggregate()` is a base-R grouped summary function. The data.table subject key is prepared before timing, so the join measurement excludes the one-time key setup cost.
+
+```{r}
+subject_repeats <- 1000L
+source_subject <- rep(seq_len(nrow(adsl)), times = subject_repeats)
+bench_adsl <- as.data.frame(adsl[source_subject])
+bench_adsl$USUBJID <- sprintf("BENCH-%06d", seq_len(nrow(bench_adsl)))
+lab_source <- rep(seq_len(nrow(adlb)), times = subject_repeats)
+lab_repeat <- rep(seq_len(subject_repeats), each = nrow(adlb))
+source_subject_index <- match(adlb$USUBJID, adsl$USUBJID)
+bench_adlb <- as.data.frame(adlb[lab_source])
+bench_adlb$USUBJID <- sprintf(
+  "BENCH-%06d",
+  (lab_repeat - 1L) * nrow(adsl) + source_subject_index[lab_source]
+)
+bench_adlb$TRT01A <- bench_adsl$TRT01A[
+  match(bench_adlb$USUBJID, bench_adsl$USUBJID)
+]
+bench_adlb_join <- bench_adlb[, c("USUBJID", "PARAMCD", "AVAL")]
+bench_adsl_dt <- as.data.table(copy(bench_adsl))
+bench_adlb_dt <- as.data.table(copy(bench_adlb))
+bench_adlb_join_dt <- as.data.table(copy(bench_adlb_join))
+setkey(bench_adsl_dt, USUBJID)
+
+base_filter_check <- bench_adsl[bench_adsl$AGE >= 65,
+                                c("USUBJID", "AGE", "TRT01A")]
+dt_filter_check <- bench_adsl_dt[AGE >= 65, .(USUBJID, AGE, TRT01A)]
+stopifnot(isTRUE(all.equal(base_filter_check, as.data.frame(dt_filter_check),
+                           check.attributes = FALSE)))
+
+base_group_check <- aggregate(AVAL ~ TRT01A + PARAMCD, data = bench_adlb,
+                              FUN = mean, na.rm = TRUE)
+dt_group_check <- as.data.frame(bench_adlb_dt[
+  , .(AVAL = mean(AVAL, na.rm = TRUE)), by = .(TRT01A, PARAMCD)
+])
+base_group_check <- base_group_check[order(base_group_check$TRT01A,
+                                           base_group_check$PARAMCD), ]
+dt_group_check <- dt_group_check[order(dt_group_check$TRT01A,
+                                       dt_group_check$PARAMCD), ]
+rownames(base_group_check) <- NULL
+rownames(dt_group_check) <- NULL
+stopifnot(isTRUE(all.equal(base_group_check, dt_group_check,
+                           check.attributes = FALSE)))
+
+base_join_check <- merge(bench_adsl, bench_adlb_join,
+                         by = "USUBJID", sort = FALSE)
+dt_join_check <- as.data.frame(
+  bench_adsl_dt[bench_adlb_join_dt, on = "USUBJID"]
+)
+base_join_check <- base_join_check[order(base_join_check$USUBJID,
+                                         base_join_check$PARAMCD), ]
+dt_join_check <- dt_join_check[order(dt_join_check$USUBJID,
+                                     dt_join_check$PARAMCD), ]
+rownames(base_join_check) <- NULL
+rownames(dt_join_check) <- NULL
+stopifnot(isTRUE(all.equal(base_join_check, dt_join_check,
+                           check.attributes = FALSE)))
+cat("Filtering, grouping, and join results passed equivalence checks.\n")
+```
+
+## Measure and read results
+
+Each `bench::mark()` call uses the same inputs for both methods. `iterations = 5` requests five runs, and `check = FALSE` is acceptable here because explicit checks were just run. The median is the middle measured elapsed time. `mem_alloc` is memory allocated by one expression, not all memory held by R. `itr/sec` estimates iterations per second. `gc/sec` reports garbage-collection activity per second; a missing value means none was observed. Measurements vary by computer, R version, package version, and background work.
+
+```{r}
+filter_bench <- bench::mark(
+  base_r = bench_adsl[bench_adsl$AGE >= 65,
+                      c("USUBJID", "AGE", "TRT01A")],
+  data_table = bench_adsl_dt[AGE >= 65, .(USUBJID, AGE, TRT01A)],
+  iterations = 5, check = FALSE
+)
+group_bench <- bench::mark(
+  base_r = aggregate(AVAL ~ TRT01A + PARAMCD, data = bench_adlb,
+                     FUN = mean, na.rm = TRUE),
+  data_table = bench_adlb_dt[
+    , .(AVAL = mean(AVAL, na.rm = TRUE)), by = .(TRT01A, PARAMCD)
+  ],
+  iterations = 5, check = FALSE
+)
+join_bench <- bench::mark(
+  base_r = merge(bench_adsl, bench_adlb_join,
+                 by = "USUBJID", sort = FALSE),
+  data_table = bench_adsl_dt[bench_adlb_join_dt, on = "USUBJID"],
+  iterations = 5, check = FALSE
+)
+```
+
+`as.numeric()` converts bench's displayed time and memory values to seconds and bytes. `write.csv()` stores simple columns only. These are measurements from this render; do not copy fixed values into the source document or claim an improvement that the results do not show.
+
+```{r}
+benchmark_rows <- function(result, task_name) {
+  data.frame(
+    task = task_name,
+    implementation = c("base R", "data.table"),
+    median_seconds = as.numeric(result$median),
+    memory_bytes = as.numeric(result$mem_alloc),
+    iterations_per_second = as.numeric(result$`itr/sec`),
+    gc_per_second = as.numeric(result$`gc/sec`)
+  )
+}
+benchmark_results <- rbind(
+  benchmark_rows(filter_bench, "filter"),
+  benchmark_rows(group_bench, "grouping"),
+  benchmark_rows(join_bench, "join")
+)
+dir.create("results", showWarnings = FALSE, recursive = TRUE)
+write.csv(benchmark_results, "results/benchmark_results.csv", row.names = FALSE)
+benchmark_results
+```
+
+# 8. Final assignment and documentation
+
+Using the synthetic inputs:
+
+1. Count subjects per treatment.
+2. Calculate mean laboratory values by treatment and parameter, with a stated missing-value rule.
+3. Join ADSL and ADLB by `USUBJID`; state which table drives the output rows.
+4. Create `AGEGR1` and explain the age rule.
+5. Filter ALT and AST records.
+6. Compare base R and data.table filtering, grouping, and joins with `bench`.
+7. Validate equivalent results before timing; handle row and column order deliberately.
+8. Prepare a short report with data sizes, R and package versions, measured median time and memory, and limitations.
+
+Expected output types: a treatment count table; a parameter-by-treatment summary; joined records with age category; validated equivalent outputs; and `results/benchmark_results.csv`. The supplied data contain 80 unique subjects and 320 lab records. The non-missing ALT/AST subset is smaller than 160 rows because some values are missing.
+
+## Practical exercises
+
+1. Make three age categories and inspect the first 10 subject rows.
+2. Filter Drug B and subjects aged 60 or older; report the number of records.
+3. Summarize mean and median by parameter and treatment. Explain why lab record count differs from subject count.
+4. Add a lab row with a made-up subject ID and compare inner and all-lab joins.
+5. Repeat the benchmarks on your computer and note whether conclusions differ.
+
+## Common beginner errors
+
+- Use `DT[condition, .(columns)]` for clear data.table filtering.
+- Remember `:=` updates by reference; use `copy()` when the original must remain unchanged.
+- `.N` counts rows, not unique subjects; use `uniqueN(USUBJID)` for subjects.
+- `mean()` returns `NA` if values are missing unless `na.rm = TRUE`; use that option only when appropriate.
+- Repeated join keys can multiply rows. Check key uniqueness and expected join row counts.
+- Sort and align columns before output comparisons; do not assume joins match without validation.
+- `setkey()` sorts and modifies a table. Include its cost if the workflow rebuilds the key every time.
+- Benchmark results vary by machine. Report only values measured in this run.
+
+## Reviewer checklist
+
+- [ ] Both input datasets are synthetic and use project-relative paths.
+- [ ] Filter, grouping, and missing-value rules are clear.
+- [ ] Join key, direction, unmatched records, duplicate keys, and row counts are checked.
+- [ ] Reference updates are intentional and copies protect required inputs.
+- [ ] Base and data.table outputs pass equivalence checks before benchmarking.
+- [ ] Benchmark inputs are identical and reported values come from the generated CSV.
+- [ ] CSV outputs are under `results/` and contain expected columns.
+
+## Definition of Done
+
+The assignment is done when all outputs pass equivalence checks, requested summaries and benchmarks are saved, the performance note reports measured values only, and a beginner can run the scripts from the project root without changing paths.

@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="R Modernization Roadmap">
+
+<title>Task 23: data.table Optimization</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Task_23_DataTable_Optimization_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Task_23_DataTable_Optimization_files/libs/quarto-html/quarto.js"></script>
+<script src="Task_23_DataTable_Optimization_files/libs/quarto-html/popper.min.js"></script>
+<script src="Task_23_DataTable_Optimization_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Task_23_DataTable_Optimization_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Task_23_DataTable_Optimization_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Task_23_DataTable_Optimization_files/libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Task_23_DataTable_Optimization_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Task_23_DataTable_Optimization_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Task_23_DataTable_Optimization_files/libs/bootstrap/bootstrap-1015923f23a08ec2139fe5cb2cc01ca7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#start-here" id="toc-start-here" class="nav-link active" data-scroll-target="#start-here"><span class="header-section-number">1</span> Start Here</a>
+  <ul class="collapse">
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages"><span class="header-section-number">1.1</span> Packages</a></li>
+  </ul></li>
+  <li><a href="#introduction-to-data.table" id="toc-introduction-to-data.table" class="nav-link" data-scroll-target="#introduction-to-data.table"><span class="header-section-number">2</span> 1. Introduction to data.table</a></li>
+  <li><a href="#column-operations-and-reducing-copies" id="toc-column-operations-and-reducing-copies" class="nav-link" data-scroll-target="#column-operations-and-reducing-copies"><span class="header-section-number">3</span> 2. Column operations and reducing copies</a></li>
+  <li><a href="#efficient-filtering" id="toc-efficient-filtering" class="nav-link" data-scroll-target="#efficient-filtering"><span class="header-section-number">4</span> 3. Efficient filtering</a></li>
+  <li><a href="#grouping-and-summarization" id="toc-grouping-and-summarization" class="nav-link" data-scroll-target="#grouping-and-summarization"><span class="header-section-number">5</span> 4. Grouping and summarization</a></li>
+  <li><a href="#joins-using-data.table" id="toc-joins-using-data.table" class="nav-link" data-scroll-target="#joins-using-data.table"><span class="header-section-number">6</span> 5. Joins using data.table</a></li>
+  <li><a href="#practical-clinical-data-transformation" id="toc-practical-clinical-data-transformation" class="nav-link" data-scroll-target="#practical-clinical-data-transformation"><span class="header-section-number">7</span> 6. Practical clinical data transformation</a></li>
+  <li><a href="#performance-comparison" id="toc-performance-comparison" class="nav-link" data-scroll-target="#performance-comparison"><span class="header-section-number">8</span> 7. Performance comparison</a>
+  <ul class="collapse">
+  <li><a href="#verify-before-timing" id="toc-verify-before-timing" class="nav-link" data-scroll-target="#verify-before-timing"><span class="header-section-number">8.1</span> Verify before timing</a></li>
+  <li><a href="#measure-and-read-results" id="toc-measure-and-read-results" class="nav-link" data-scroll-target="#measure-and-read-results"><span class="header-section-number">8.2</span> Measure and read results</a></li>
+  </ul></li>
+  <li><a href="#final-assignment-and-documentation" id="toc-final-assignment-and-documentation" class="nav-link" data-scroll-target="#final-assignment-and-documentation"><span class="header-section-number">9</span> 8. Final assignment and documentation</a>
+  <ul class="collapse">
+  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">9.1</span> Practical exercises</a></li>
+  <li><a href="#common-beginner-errors" id="toc-common-beginner-errors" class="nav-link" data-scroll-target="#common-beginner-errors"><span class="header-section-number">9.2</span> Common beginner errors</a></li>
+  <li><a href="#reviewer-checklist" id="toc-reviewer-checklist" class="nav-link" data-scroll-target="#reviewer-checklist"><span class="header-section-number">9.3</span> Reviewer checklist</a></li>
+  <li><a href="#definition-of-done" id="toc-definition-of-done" class="nav-link" data-scroll-target="#definition-of-done"><span class="header-section-number">9.4</span> Definition of Done</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Task 23: data.table Optimization</h1>
+<p class="subtitle lead">A practical introduction for clinical data programmers</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>R Modernization Roadmap </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="start-here" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Start Here</h1>
+<p>This project teaches practical ways to work efficiently with <code>data.table</code>. The examples use simulated ADSL-like subject data and ADLB-like lab data. They do not describe real people and must not be used for clinical decisions. Work from this project folder so file paths such as <code>data/synthetic_adsl.csv</code> resolve correctly. The matching lesson scripts are in <code>scripts/</code>.</p>
+<section id="packages" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="packages"><span class="header-section-number">1.1</span> Packages</h2>
+<p>Use <code>data.table</code> for data work and <code>bench</code> only for benchmarking. Install them once in an R console. This code block is not executed during rendering.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run manually in R when the packages are not installed.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"data.table"</span>, <span class="st">"bench"</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org/"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>library()</code> loads a package for this R session. <code>fread()</code> reads a CSV into a data.table. <code>head()</code> displays the first rows and <code>dim()</code> reports the number of rows and columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>adsl <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"data/synthetic_adsl.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>adlb <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"data/synthetic_adlb.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adsl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE    SEX  TRT01A
+     &lt;char&gt; &lt;int&gt; &lt;char&gt;  &lt;char&gt;
+1: SUBJ-001    65      F Placebo
+2: SUBJ-002    70      F Placebo
+3: SUBJ-003    24      M Placebo
+4: SUBJ-004    81      M  Drug A
+5: SUBJ-005    36      M Placebo
+6: SUBJ-006    53      F  Drug B</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(adsl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 80  4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adlb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID PARAMCD  AVAL
+     &lt;char&gt;  &lt;char&gt; &lt;num&gt;
+1: SUBJ-001     ALT  35.1
+2: SUBJ-002     ALT   5.3
+3: SUBJ-003     ALT  21.0
+4: SUBJ-004     ALT   3.1
+5: SUBJ-005     ALT  17.8
+6: SUBJ-006     ALT  46.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(adlb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 320   3</code></pre>
+</div>
+</div>
+<p>Expected dimensions: 80 rows by 4 columns for ADSL, and 320 rows by 3 columns for ADLB. ADLB has several records per subject and includes a few missing <code>AVAL</code> values.</p>
+</section>
+</section>
+<section id="introduction-to-data.table" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> 1. Introduction to data.table</h1>
+<p><code>data.table</code> is an R package for selecting, changing, grouping, and joining tables. It extends <code>data.frame</code> and provides concise operations that can avoid unnecessary copies. A <code>data.frame</code> is R’s standard rectangular data structure. A <code>data.table</code> is also rectangular, but its <code>:=</code> operator can update columns by reference, and its joins and grouped calculations are designed for efficient work.</p>
+<p>The common syntax is <code>DT[i, j, by]</code>: <code>i</code> chooses rows, <code>j</code> chooses or calculates columns, and <code>by</code> defines groups. <code>data.table()</code> creates a data.table from named vectors. <code>head()</code> displays its first rows. <code>str()</code> describes column names and data types. <code>dim()</code> returns row and column counts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>small_dt <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">USUBJID =</span> <span class="fu">c</span>(<span class="st">"SUBJ-001"</span>, <span class="st">"SUBJ-002"</span>, <span class="st">"SUBJ-003"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">AGE =</span> <span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">67</span>, <span class="dv">52</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">TRT01A =</span> <span class="fu">c</span>(<span class="st">"Drug A"</span>, <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(small_dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE  TRT01A
+     &lt;char&gt; &lt;num&gt;  &lt;char&gt;
+1: SUBJ-001    34  Drug A
+2: SUBJ-002    67 Placebo
+3: SUBJ-003    52  Drug A</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(small_dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Classes 'data.table' and 'data.frame':  3 obs. of  3 variables:
+ $ USUBJID: chr  "SUBJ-001" "SUBJ-002" "SUBJ-003"
+ $ AGE    : num  34 67 52
+ $ TRT01A : chr  "Drug A" "Placebo" "Drug A"
+ - attr(*, ".internal.selfref")=&lt;externalptr&gt; </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(small_dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 3</code></pre>
+</div>
+</div>
+<p>Expected: three rows and three columns; identifiers and treatment are character, and age is numeric. <code>setDT()</code> converts an existing data.frame into a data.table in place, so it changes the supplied object rather than making an independent table. <code>class()</code> reports the class names attached to an R object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>small_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">USUBJID =</span> <span class="fu">c</span>(<span class="st">"SUBJ-004"</span>, <span class="st">"SUBJ-005"</span>), <span class="at">AGE =</span> <span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">70</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">setDT</span>(small_df)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(small_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.table" "data.frame"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(small_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE
+     &lt;char&gt; &lt;num&gt;
+1: SUBJ-004    45
+2: SUBJ-005    70</code></pre>
+</div>
+</div>
+</section>
+<section id="column-operations-and-reducing-copies" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 2. Column operations and reducing copies</h1>
+<p>The <code>:=</code> operator adds or modifies columns by reference. This updates the existing table instead of creating a full modified copy. <code>fifelse()</code> is data.table’s fast, type-consistent conditional function. The age bands below are examples only, not a clinical standard. <code>copy()</code> makes a separate data.table when the original must stay unchanged.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>age_example <span class="ot">&lt;-</span> <span class="fu">copy</span>(adsl)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>age_example[, AGEGR1 <span class="sc">:</span><span class="er">=</span> <span class="fu">fifelse</span>(AGE <span class="sc">&lt;</span> <span class="dv">40</span>, <span class="st">"&lt;40"</span>, <span class="st">"40+"</span>)]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>age_example[, AGE_NEXT_YEAR <span class="sc">:</span><span class="er">=</span> AGE <span class="sc">+</span> <span class="dv">1</span>]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(age_example[, .(USUBJID, AGE, AGEGR1, AGE_NEXT_YEAR)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE AGEGR1 AGE_NEXT_YEAR
+     &lt;char&gt; &lt;int&gt; &lt;char&gt;         &lt;num&gt;
+1: SUBJ-001    65    40+            66
+2: SUBJ-002    70    40+            71
+3: SUBJ-003    24    &lt;40            25
+4: SUBJ-004    81    40+            82
+5: SUBJ-005    36    &lt;40            37
+6: SUBJ-006    53    40+            54</code></pre>
+</div>
+</div>
+<p>Line by line: copy ADSL so the source remains unchanged; add <code>AGEGR1</code> using the stated age condition; add a numeric next-year age; then display only the four named columns. <code>.()</code> is a short way to make the selected list of output columns.</p>
+<p>Ordinary base-R data.frame assignment follows copy-on-modify: changing the copy normally leaves the original alone. A second name for a data.table refers to the same table, so a <code>:=</code> update can be seen through either name. Use <code>copy()</code> before a reference update when you need to preserve the starting data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>base_original <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adsl)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>base_changed <span class="ot">&lt;-</span> base_original</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>base_changed<span class="sc">$</span>AGE[<span class="dv">1</span>] <span class="ot">&lt;-</span> base_changed<span class="sc">$</span>AGE[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">original =</span> base_original<span class="sc">$</span>AGE[<span class="dv">1</span>], <span class="at">changed =</span> base_changed<span class="sc">$</span>AGE[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>original  changed 
+      65       66 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dt_original <span class="ot">&lt;-</span> <span class="fu">copy</span>(adsl)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dt_alias <span class="ot">&lt;-</span> dt_original</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>dt_original[, AGE <span class="sc">:</span><span class="er">=</span> AGE <span class="sc">+</span> <span class="dv">1</span>]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">changed =</span> dt_original<span class="sc">$</span>AGE[<span class="dv">1</span>], <span class="at">alias_sees_change =</span> dt_alias<span class="sc">$</span>AGE[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          changed alias_sees_change 
+               66                66 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>safe_copy <span class="ot">&lt;-</span> <span class="fu">copy</span>(adsl)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>safe_copy[, AGE <span class="sc">:</span><span class="er">=</span> AGE <span class="sc">+</span> <span class="dv">1</span>]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">original =</span> adsl<span class="sc">$</span>AGE[<span class="dv">1</span>], <span class="at">copied_table =</span> safe_copy<span class="sc">$</span>AGE[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    original copied_table 
+          65           66 </code></pre>
+</div>
+</div>
+<p>Use <code>copy()</code> before modifying an input needed later or when creating a fair comparison. Avoid copying when an in-place update is safe. See <a href="scripts/02_column_operations.R">the column lesson</a>.</p>
+</section>
+<section id="efficient-filtering" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 3. Efficient filtering</h1>
+<p>Filtering selects rows that meet conditions. In base R, the row condition goes before the comma and selected columns follow it. In data.table syntax the condition is also before the comma, and selected columns can be named inside <code>.()</code>.</p>
+<p><code>all.equal()</code> compares results; <code>isTRUE()</code> gives a simple TRUE/FALSE answer; <code>stopifnot()</code> stops if the comparison fails. This makes the equivalence check executable rather than an assumption.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>adults_base <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adsl)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>adults_base <span class="ot">&lt;-</span> adults_base[adults_base<span class="sc">$</span>AGE <span class="sc">&gt;=</span> <span class="dv">65</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"USUBJID"</span>, <span class="st">"AGE"</span>, <span class="st">"TRT01A"</span>)]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>adults_dt <span class="ot">&lt;-</span> adsl[AGE <span class="sc">&gt;=</span> <span class="dv">65</span>, .(USUBJID, AGE, TRT01A)]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  adults_base, <span class="fu">as.data.frame</span>(adults_dt), <span class="at">check.attributes =</span> <span class="cn">FALSE</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(adults_dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE  TRT01A
+     &lt;char&gt; &lt;int&gt;  &lt;char&gt;
+1: SUBJ-001    65 Placebo
+2: SUBJ-002    70 Placebo
+3: SUBJ-004    81  Drug A
+4: SUBJ-010    82 Placebo
+5: SUBJ-012    67 Placebo
+6: SUBJ-013    82 Placebo</code></pre>
+</div>
+</div>
+<p>Expected: both methods return the same people and columns. <code>&amp;</code> means “and”. <code>%chin%</code> checks character values against a list. <code>!is.na()</code> keeps non-missing values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>drug_a <span class="ot">&lt;-</span> adsl[TRT01A <span class="sc">==</span> <span class="st">"Drug A"</span>, .(USUBJID, AGE, SEX, TRT01A)]</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>selected_labs <span class="ot">&lt;-</span> adlb[PARAMCD <span class="sc">%chin%</span> <span class="fu">c</span>(<span class="st">"ALT"</span>, <span class="st">"AST"</span>) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(AVAL)]</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>older_drug_a <span class="ot">&lt;-</span> adsl[AGE <span class="sc">&gt;=</span> <span class="dv">65</span> <span class="sc">&amp;</span> TRT01A <span class="sc">==</span> <span class="st">"Drug A"</span>]</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">drug_a_subjects =</span> <span class="fu">nrow</span>(drug_a), <span class="at">selected_lab_rows =</span> <span class="fu">nrow</span>(selected_labs),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">older_drug_a =</span> <span class="fu">nrow</span>(older_drug_a))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  drug_a_subjects selected_lab_rows      older_drug_a 
+               35               156                15 </code></pre>
+</div>
+</div>
+<p><code>nrow()</code> counts records. The project includes age, treatment, selected test, and multiple-condition filters in <a href="scripts/03_filtering.R">the filtering lesson</a>. Always check the rule and missing-value handling before considering speed.</p>
+</section>
+<section id="grouping-and-summarization" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 4. Grouping and summarization</h1>
+<p>Grouping calculates a separate result for each category. <code>by</code> names the grouping variables. <code>.N</code> counts rows in the current group, while <code>uniqueN()</code> counts distinct values. Thus <code>.N</code> in ADLB counts lab rows, not people. <code>.()</code> creates named output columns. Since each ADSL row is one subject, <code>uniqueN(USUBJID)</code> explicitly counts subjects.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>subject_counts <span class="ot">&lt;-</span> adsl[</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  , .(<span class="at">N_RECORDS =</span> .N, <span class="at">N_SUBJECTS =</span> <span class="fu">uniqueN</span>(USUBJID)), by <span class="ot">=</span> TRT01A</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>subject_counts[<span class="fu">order</span>(TRT01A)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    TRT01A N_RECORDS N_SUBJECTS
+    &lt;char&gt;     &lt;int&gt;      &lt;int&gt;
+1:  Drug A        35         35
+2:  Drug B        12         12
+3: Placebo        33         33</code></pre>
+</div>
+</div>
+<p><code>order()</code> returns row positions in sorted order. <code>mean()</code>, <code>median()</code>, <code>min()</code>, and <code>max()</code> calculate numeric summaries. <code>na.rm = TRUE</code> skips missing values; <code>sum(!is.na(AVAL))</code> counts valid results. The following code summarizes each laboratory parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>labs_by_parameter <span class="ot">&lt;-</span> adlb[</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  , .(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_RECORDS =</span> .N,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_VALID =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(AVAL)),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEAN_AVAL =</span> <span class="fu">mean</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEDIAN_AVAL =</span> <span class="fu">median</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">MIN_AVAL =</span> <span class="fu">min</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAX_AVAL =</span> <span class="fu">max</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  ), by <span class="ot">=</span> PARAMCD</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>labs_by_parameter[<span class="fu">order</span>(PARAMCD)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   PARAMCD N_RECORDS N_VALID MEAN_AVAL MEDIAN_AVAL MIN_AVAL MAX_AVAL
+    &lt;char&gt;     &lt;int&gt;   &lt;int&gt;     &lt;num&gt;       &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+1:     ALT        80      78  26.45000        27.9     -2.2     51.8
+2:     AST        80      78  25.85000        25.7      2.9     54.7
+3:   CREAT        80      80   0.88625         0.9      0.2      1.6
+4:     HGB        80      76  12.98421        13.1      7.9     16.7</code></pre>
+</div>
+</div>
+<p>To summarize by treatment as well as parameter, first bring treatment onto each lab row with a join. Then <code>by = .(PARAMCD, TRT01A)</code> groups on both columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>lab_with_treatment <span class="ot">&lt;-</span> adsl[adlb, on <span class="ot">=</span> <span class="st">"USUBJID"</span>]</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>labs_by_treatment <span class="ot">&lt;-</span> lab_with_treatment[</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  , .(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_RECORDS =</span> .N,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">N_VALID =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(AVAL)),</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEAN_AVAL =</span> <span class="fu">mean</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEDIAN_AVAL =</span> <span class="fu">median</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">MIN_AVAL =</span> <span class="fu">min</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAX_AVAL =</span> <span class="fu">max</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  ), by <span class="ot">=</span> .(PARAMCD, TRT01A)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>labs_by_treatment[<span class="fu">order</span>(PARAMCD, TRT01A)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    PARAMCD  TRT01A N_RECORDS N_VALID  MEAN_AVAL MEDIAN_AVAL MIN_AVAL MAX_AVAL
+     &lt;char&gt;  &lt;char&gt;     &lt;int&gt;   &lt;int&gt;      &lt;num&gt;       &lt;num&gt;    &lt;num&gt;    &lt;num&gt;
+ 1:     ALT  Drug A        35      35 27.8285714       29.80      3.1     51.8
+ 2:     ALT  Drug B        12      11 27.7181818       30.00     15.2     46.3
+ 3:     ALT Placebo        33      32 24.5062500       25.55     -2.2     45.4
+ 4:     AST  Drug A        35      35 26.3514286       27.50      2.9     54.7
+ 5:     AST  Drug B        12      12 27.4250000       25.70     14.8     43.2
+ 6:     AST Placebo        33      31 24.6741935       24.60      5.2     43.1
+ 7:   CREAT  Drug A        35      35  0.8885714        0.90      0.4      1.6
+ 8:   CREAT  Drug B        12      12  0.8916667        0.85      0.2      1.4
+ 9:   CREAT Placebo        33      33  0.8818182        0.90      0.4      1.6
+10:     HGB  Drug A        35      35 12.7914286       12.90      7.9     16.2
+11:     HGB  Drug B        12      12 13.2916667       13.20     10.8     16.7
+12:     HGB Placebo        33      29 13.0896552       13.30      9.8     16.6</code></pre>
+</div>
+</div>
+<p><code>N_RECORDS</code> includes missing results; <code>N_VALID</code> does not. See <a href="scripts/04_grouping_summary.R">the grouping lesson</a>.</p>
+</section>
+<section id="joins-using-data.table" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 5. Joins using data.table</h1>
+<p>A join matches rows between two tables using shared identifier columns. ADSL has subject-level information; ADLB has repeated lab records. Joining adds age, sex, and treatment to each matched lab row. ADSL has one row per subject, while each subject has multiple ADLB rows. Repeated subject values in a join result are expected.</p>
+<p>Base R <code>merge()</code> combines matching rows; <code>all = FALSE</code> requests only matches. A data.table join has the form <code>X[i, on = "key"]</code>: it looks up each row of <code>i</code> in <code>X</code>. Thus <code>adsl[adlb, on = "USUBJID"]</code> starts from the lab records and adds matched subject columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>base_join <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(adsl), <span class="fu">as.data.frame</span>(adlb),</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>join_by_on <span class="ot">&lt;-</span> adsl[adlb, on <span class="ot">=</span> <span class="st">"USUBJID"</span>]</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(join_by_on)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    USUBJID   AGE    SEX  TRT01A PARAMCD  AVAL
+     &lt;char&gt; &lt;int&gt; &lt;char&gt;  &lt;char&gt;  &lt;char&gt; &lt;num&gt;
+1: SUBJ-001    65      F Placebo     ALT  35.1
+2: SUBJ-002    70      F Placebo     ALT   5.3
+3: SUBJ-003    24      M Placebo     ALT  21.0
+4: SUBJ-004    81      M  Drug A     ALT   3.1
+5: SUBJ-005    36      M Placebo     ALT  17.8
+6: SUBJ-006    53      F  Drug B     ALT  46.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">base_rows =</span> <span class="fu">nrow</span>(base_join), <span class="at">data_table_rows =</span> <span class="fu">nrow</span>(join_by_on))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      base_rows data_table_rows 
+            320             320 </code></pre>
+</div>
+</div>
+<p>Expected: 320 rows, one for each matched ADLB row. The direction matters: <code>adsl[adlb]</code> starts from lab rows; reversing the tables changes which records drive the output.</p>
+<p><code>setkey()</code> sorts a data.table by its key and records that ordering for lookups and joins. It changes the table by reference, so use <code>copy()</code> if the original order matters. <code>on</code> names join columns explicitly and is clear for a one-off join. A key can help with repeated lookups on the same column, but building one has a cost.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>adsl_keyed <span class="ot">&lt;-</span> <span class="fu">copy</span>(adsl)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setkey</span>(adsl_keyed, USUBJID)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>keyed_join <span class="ot">&lt;-</span> adsl_keyed[adlb, on <span class="ot">=</span> <span class="st">"USUBJID"</span>]</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>base_check <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(base_join)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>dt_check <span class="ot">&lt;-</span> <span class="fu">copy</span>(keyed_join)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">setorder</span>(base_check, USUBJID, PARAMCD)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">setorder</span>(dt_check, USUBJID, PARAMCD)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(base_check), <span class="fu">as.data.frame</span>(dt_check), <span class="at">check.attributes =</span> <span class="cn">FALSE</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>)))</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Validated matched records:"</span>, <span class="fu">nrow</span>(dt_check), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Validated matched records: 320 </code></pre>
+</div>
+</div>
+<p><code>setorder()</code> sorts rows in place. The code sorts both outputs to a common order before comparing; it checks values, not just row counts. Join order and column order can differ between methods, so check both when downstream code depends on them.</p>
+<p>A left join keeps every row from its left table. In <code>merge()</code>, <code>all.x = TRUE</code> preserves unmatched rows in <code>x</code> and fills missing columns with <code>NA</code>. Duplicate keys can create several output rows for one input row. <code>rbind()</code> stacks rows from tables with the same columns. This small example adds a lab record with no subject match to show the behavior.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>left_join <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(adsl), <span class="fu">as.data.frame</span>(adlb),</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>lab_with_unmatched_id <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(adlb),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">USUBJID =</span> <span class="st">"SUBJ-NOT-IN-ADSL"</span>, <span class="at">PARAMCD =</span> <span class="st">"ALT"</span>, <span class="at">AVAL =</span> <span class="dv">22</span>)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>matched_only <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(adsl), lab_with_unmatched_id,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>all_lab_rows <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(adsl), lab_with_unmatched_id,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">all.y =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">left_join_rows =</span> <span class="fu">nrow</span>(left_join), <span class="at">matched_rows =</span> <span class="fu">nrow</span>(matched_only),</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">all_lab_rows =</span> <span class="fu">nrow</span>(all_lab_rows))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>left_join_rows   matched_rows   all_lab_rows 
+           320            320            321 </code></pre>
+</div>
+</div>
+<p>The unmatched lab row is excluded by the inner join and retained by <code>all.y = TRUE</code>. <code>merge()</code> can sort rows and its output column order should be checked. See <a href="scripts/05_datatable_joins.R">the join lesson</a>.</p>
+</section>
+<section id="practical-clinical-data-transformation" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 6. Practical clinical data transformation</h1>
+<p>The end-to-end program reads both CSVs, keeps non-missing ALT and AST results, derives an age group, joins subject details to each lab row, summarizes by test/treatment/age group, and writes a CSV. <code>source()</code> runs an R script in the current session, and base R <code>read.csv()</code> reads a CSV file into a data.frame. <code>dir.create()</code> makes the output folder if needed. <code>write.csv()</code> exports a plain data.frame and avoids list-column CSV errors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/06_clinical_data_transformation.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Saved 12 summary rows to results/clinical_lab_summary.csv
+    PARAMCD  TRT01A AGEGR1 N_RECORDS N_SUBJECTS MEAN_AVAL MEDIAN_AVAL MIN_AVAL
+     &lt;char&gt;  &lt;char&gt; &lt;char&gt;     &lt;int&gt;      &lt;int&gt;     &lt;num&gt;       &lt;num&gt;    &lt;num&gt;
+ 1:     ALT  Drug A    40+        26         26  25.81154       27.55      3.1
+ 2:     ALT  Drug A    &lt;40         9          9  33.65556       38.40     14.2
+ 3:     ALT  Drug B    40+         9          9  26.31111       26.30     15.2
+ 4:     ALT  Drug B    &lt;40         2          2  34.05000       34.05     31.0
+ 5:     ALT Placebo    40+        23         23  23.83913       26.90     -2.2
+ 6:     ALT Placebo    &lt;40         9          9  26.21111       21.00      6.0
+ 7:     AST  Drug A    40+        26         26  24.87692       24.00      2.9
+ 8:     AST  Drug A    &lt;40         9          9  30.61111       29.30      7.9
+ 9:     AST  Drug B    40+        10         10  26.47000       25.70     14.8
+10:     AST  Drug B    &lt;40         2          2  32.20000       32.20     21.2
+11:     AST Placebo    40+        21         21  24.77619       24.60      8.2
+12:     AST Placebo    &lt;40        10         10  24.46000       25.55      5.2
+    MAX_AVAL
+       &lt;num&gt;
+ 1:     51.8
+ 2:     49.5
+ 3:     46.3
+ 4:     37.1
+ 5:     42.4
+ 6:     45.4
+ 7:     48.2
+ 8:     54.7
+ 9:     34.4
+10:     43.2
+11:     43.1
+12:     41.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(<span class="st">"results/clinical_lab_summary.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   PARAMCD  TRT01A AGEGR1 N_RECORDS N_SUBJECTS MEAN_AVAL MEDIAN_AVAL MIN_AVAL
+1      ALT  Drug A    40+        26         26  25.81154       27.55      3.1
+2      ALT  Drug A    &lt;40         9          9  33.65556       38.40     14.2
+3      ALT  Drug B    40+         9          9  26.31111       26.30     15.2
+4      ALT  Drug B    &lt;40         2          2  34.05000       34.05     31.0
+5      ALT Placebo    40+        23         23  23.83913       26.90     -2.2
+6      ALT Placebo    &lt;40         9          9  26.21111       21.00      6.0
+7      AST  Drug A    40+        26         26  24.87692       24.00      2.9
+8      AST  Drug A    &lt;40         9          9  30.61111       29.30      7.9
+9      AST  Drug B    40+        10         10  26.47000       25.70     14.8
+10     AST  Drug B    &lt;40         2          2  32.20000       32.20     21.2
+11     AST Placebo    40+        21         21  24.77619       24.60      8.2
+12     AST Placebo    &lt;40        10         10  24.46000       25.55      5.2
+   MAX_AVAL
+1      51.8
+2      49.5
+3      46.3
+4      37.1
+5      42.4
+6      45.4
+7      48.2
+8      54.7
+9      34.4
+10     43.2
+11     43.1
+12     41.8</code></pre>
+</div>
+</div>
+<p>Expected: one row per observed parameter, treatment, and age-group combination, with record and subject counts plus mean, median, minimum, and maximum. The values come from the synthetic CSV inputs. The script can be run independently from the project root.</p>
+</section>
+<section id="performance-comparison" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 7. Performance comparison</h1>
+<section id="verify-before-timing" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="verify-before-timing"><span class="header-section-number">8.1</span> Verify before timing</h2>
+<p><code>bench::mark()</code> runs expressions repeatedly and measures time and memory. First compare equivalent results; only then time the same input data. <code>as.data.frame()</code> converts a table to base-R data.frame form, while <code>as.data.table()</code> converts it back. <code>rep()</code> repeats a sequence, <code>seq_len()</code> creates a sequence of row numbers, and <code>match()</code> finds each lab record’s subject position. <code>sprintf()</code> formats unique synthetic subject IDs. The following code uses them to expand the seeded inputs to 80,000 subjects and 320,000 lab records. This remains simulated data. <code>aggregate()</code> is a base-R grouped summary function. The data.table subject key is prepared before timing, so the join measurement excludes the one-time key setup cost.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>subject_repeats <span class="ot">&lt;-</span> <span class="dv">1000</span>L</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>source_subject <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(adsl)), <span class="at">times =</span> subject_repeats)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>bench_adsl <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adsl[source_subject])</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>bench_adsl<span class="sc">$</span>USUBJID <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"BENCH-%06d"</span>, <span class="fu">seq_len</span>(<span class="fu">nrow</span>(bench_adsl)))</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>lab_source <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(adlb)), <span class="at">times =</span> subject_repeats)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>lab_repeat <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(subject_repeats), <span class="at">each =</span> <span class="fu">nrow</span>(adlb))</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>source_subject_index <span class="ot">&lt;-</span> <span class="fu">match</span>(adlb<span class="sc">$</span>USUBJID, adsl<span class="sc">$</span>USUBJID)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>bench_adlb <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adlb[lab_source])</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>bench_adlb<span class="sc">$</span>USUBJID <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"BENCH-%06d"</span>,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  (lab_repeat <span class="sc">-</span> <span class="dv">1</span>L) <span class="sc">*</span> <span class="fu">nrow</span>(adsl) <span class="sc">+</span> source_subject_index[lab_source]</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>bench_adlb<span class="sc">$</span>TRT01A <span class="ot">&lt;-</span> bench_adsl<span class="sc">$</span>TRT01A[</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">match</span>(bench_adlb<span class="sc">$</span>USUBJID, bench_adsl<span class="sc">$</span>USUBJID)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>bench_adlb_join <span class="ot">&lt;-</span> bench_adlb[, <span class="fu">c</span>(<span class="st">"USUBJID"</span>, <span class="st">"PARAMCD"</span>, <span class="st">"AVAL"</span>)]</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>bench_adsl_dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(<span class="fu">copy</span>(bench_adsl))</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>bench_adlb_dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(<span class="fu">copy</span>(bench_adlb))</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>bench_adlb_join_dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(<span class="fu">copy</span>(bench_adlb_join))</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a><span class="fu">setkey</span>(bench_adsl_dt, USUBJID)</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>base_filter_check <span class="ot">&lt;-</span> bench_adsl[bench_adsl<span class="sc">$</span>AGE <span class="sc">&gt;=</span> <span class="dv">65</span>,</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">c</span>(<span class="st">"USUBJID"</span>, <span class="st">"AGE"</span>, <span class="st">"TRT01A"</span>)]</span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>dt_filter_check <span class="ot">&lt;-</span> bench_adsl_dt[AGE <span class="sc">&gt;=</span> <span class="dv">65</span>, .(USUBJID, AGE, TRT01A)]</span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(base_filter_check, <span class="fu">as.data.frame</span>(dt_filter_check),</span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a>                           <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>base_group_check <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(AVAL <span class="sc">~</span> TRT01A <span class="sc">+</span> PARAMCD, <span class="at">data =</span> bench_adlb,</span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>                              <span class="at">FUN =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>dt_group_check <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(bench_adlb_dt[</span>
+<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a>  , .(<span class="at">AVAL =</span> <span class="fu">mean</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="at">by =</span> .(TRT01A, PARAMCD)</span>
+<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>base_group_check <span class="ot">&lt;-</span> base_group_check[<span class="fu">order</span>(base_group_check<span class="sc">$</span>TRT01A,</span>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a>                                           base_group_check<span class="sc">$</span>PARAMCD), ]</span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>dt_group_check <span class="ot">&lt;-</span> dt_group_check[<span class="fu">order</span>(dt_group_check<span class="sc">$</span>TRT01A,</span>
+<span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a>                                       dt_group_check<span class="sc">$</span>PARAMCD), ]</span>
+<span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_group_check) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(dt_group_check) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(base_group_check, dt_group_check,</span>
+<span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a>                           <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-42"><a href="#cb50-42" aria-hidden="true" tabindex="-1"></a>base_join_check <span class="ot">&lt;-</span> <span class="fu">merge</span>(bench_adsl, bench_adlb_join,</span>
+<span id="cb50-43"><a href="#cb50-43" aria-hidden="true" tabindex="-1"></a>                         <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">sort =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-44"><a href="#cb50-44" aria-hidden="true" tabindex="-1"></a>dt_join_check <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(</span>
+<span id="cb50-45"><a href="#cb50-45" aria-hidden="true" tabindex="-1"></a>  bench_adsl_dt[bench_adlb_join_dt, <span class="at">on =</span> <span class="st">"USUBJID"</span>]</span>
+<span id="cb50-46"><a href="#cb50-46" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-47"><a href="#cb50-47" aria-hidden="true" tabindex="-1"></a>base_join_check <span class="ot">&lt;-</span> base_join_check[<span class="fu">order</span>(base_join_check<span class="sc">$</span>USUBJID,</span>
+<span id="cb50-48"><a href="#cb50-48" aria-hidden="true" tabindex="-1"></a>                                         base_join_check<span class="sc">$</span>PARAMCD), ]</span>
+<span id="cb50-49"><a href="#cb50-49" aria-hidden="true" tabindex="-1"></a>dt_join_check <span class="ot">&lt;-</span> dt_join_check[<span class="fu">order</span>(dt_join_check<span class="sc">$</span>USUBJID,</span>
+<span id="cb50-50"><a href="#cb50-50" aria-hidden="true" tabindex="-1"></a>                                     dt_join_check<span class="sc">$</span>PARAMCD), ]</span>
+<span id="cb50-51"><a href="#cb50-51" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(base_join_check) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb50-52"><a href="#cb50-52" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(dt_join_check) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb50-53"><a href="#cb50-53" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">isTRUE</span>(<span class="fu">all.equal</span>(base_join_check, dt_join_check,</span>
+<span id="cb50-54"><a href="#cb50-54" aria-hidden="true" tabindex="-1"></a>                           <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb50-55"><a href="#cb50-55" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Filtering, grouping, and join results passed equivalence checks.</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Filtering, grouping, and join results passed equivalence checks.</code></pre>
+</div>
+</div>
+</section>
+<section id="measure-and-read-results" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="measure-and-read-results"><span class="header-section-number">8.2</span> Measure and read results</h2>
+<p>Each <code>bench::mark()</code> call uses the same inputs for both methods. <code>iterations = 5</code> requests five runs, and <code>check = FALSE</code> is acceptable here because explicit checks were just run. The median is the middle measured elapsed time. <code>mem_alloc</code> is memory allocated by one expression, not all memory held by R. <code>itr/sec</code> estimates iterations per second. <code>gc/sec</code> reports garbage-collection activity per second; a missing value means none was observed. Measurements vary by computer, R version, package version, and background work.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>filter_bench <span class="ot">&lt;-</span> bench<span class="sc">::</span><span class="fu">mark</span>(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_r =</span> bench_adsl[bench_adsl<span class="sc">$</span>AGE <span class="sc">&gt;=</span> <span class="dv">65</span>,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">"USUBJID"</span>, <span class="st">"AGE"</span>, <span class="st">"TRT01A"</span>)],</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_table =</span> bench_adsl_dt[AGE <span class="sc">&gt;=</span> <span class="dv">65</span>, .(USUBJID, AGE, TRT01A)],</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">iterations =</span> <span class="dv">5</span>, <span class="at">check =</span> <span class="cn">FALSE</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>group_bench <span class="ot">&lt;-</span> bench<span class="sc">::</span><span class="fu">mark</span>(</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_r =</span> <span class="fu">aggregate</span>(AVAL <span class="sc">~</span> TRT01A <span class="sc">+</span> PARAMCD, <span class="at">data =</span> bench_adlb,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">FUN =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_table =</span> bench_adlb_dt[</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>    , .(<span class="at">AVAL =</span> <span class="fu">mean</span>(AVAL, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="at">by =</span> .(TRT01A, PARAMCD)</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  ],</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">iterations =</span> <span class="dv">5</span>, <span class="at">check =</span> <span class="cn">FALSE</span></span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>join_bench <span class="ot">&lt;-</span> bench<span class="sc">::</span><span class="fu">mark</span>(</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_r =</span> <span class="fu">merge</span>(bench_adsl, bench_adlb_join,</span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">by =</span> <span class="st">"USUBJID"</span>, <span class="at">sort =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_table =</span> bench_adsl_dt[bench_adlb_join_dt, <span class="at">on =</span> <span class="st">"USUBJID"</span>],</span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">iterations =</span> <span class="dv">5</span>, <span class="at">check =</span> <span class="cn">FALSE</span></span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>as.numeric()</code> converts bench’s displayed time and memory values to seconds and bytes. <code>write.csv()</code> stores simple columns only. These are measurements from this render; do not copy fixed values into the source document or claim an improvement that the results do not show.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>benchmark_rows <span class="ot">&lt;-</span> <span class="cf">function</span>(result, task_name) {</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">task =</span> task_name,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">implementation =</span> <span class="fu">c</span>(<span class="st">"base R"</span>, <span class="st">"data.table"</span>),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_seconds =</span> <span class="fu">as.numeric</span>(result<span class="sc">$</span>median),</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">memory_bytes =</span> <span class="fu">as.numeric</span>(result<span class="sc">$</span>mem_alloc),</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">iterations_per_second =</span> <span class="fu">as.numeric</span>(result<span class="sc">$</span><span class="st">`</span><span class="at">itr/sec</span><span class="st">`</span>),</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">gc_per_second =</span> <span class="fu">as.numeric</span>(result<span class="sc">$</span><span class="st">`</span><span class="at">gc/sec</span><span class="st">`</span>)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>benchmark_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">benchmark_rows</span>(filter_bench, <span class="st">"filter"</span>),</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">benchmark_rows</span>(group_bench, <span class="st">"grouping"</span>),</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">benchmark_rows</span>(join_bench, <span class="st">"join"</span>)</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"results"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(benchmark_results, <span class="st">"results/benchmark_results.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>benchmark_results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      task implementation median_seconds memory_bytes iterations_per_second
+1   filter         base R    0.001765321      3102848            550.525351
+2   filter     data.table    0.001545783      2178632            585.948013
+3 grouping         base R    0.121358735    136505432              7.367599
+4 grouping     data.table    0.018690099      9710480             56.135987
+5     join         base R    0.338985240     81379424              2.938518
+6     join     data.table    0.061913087     23148424             13.750990
+  gc_per_second
+1      0.000000
+2      0.000000
+3     19.155759
+4     11.227197
+5      3.526222
+6      5.500396</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="final-assignment-and-documentation" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 8. Final assignment and documentation</h1>
+<p>Using the synthetic inputs:</p>
+<ol type="1">
+<li>Count subjects per treatment.</li>
+<li>Calculate mean laboratory values by treatment and parameter, with a stated missing-value rule.</li>
+<li>Join ADSL and ADLB by <code>USUBJID</code>; state which table drives the output rows.</li>
+<li>Create <code>AGEGR1</code> and explain the age rule.</li>
+<li>Filter ALT and AST records.</li>
+<li>Compare base R and data.table filtering, grouping, and joins with <code>bench</code>.</li>
+<li>Validate equivalent results before timing; handle row and column order deliberately.</li>
+<li>Prepare a short report with data sizes, R and package versions, measured median time and memory, and limitations.</li>
+</ol>
+<p>Expected output types: a treatment count table; a parameter-by-treatment summary; joined records with age category; validated equivalent outputs; and <code>results/benchmark_results.csv</code>. The supplied data contain 80 unique subjects and 320 lab records. The non-missing ALT/AST subset is smaller than 160 rows because some values are missing.</p>
+<section id="practical-exercises" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="practical-exercises"><span class="header-section-number">9.1</span> Practical exercises</h2>
+<ol type="1">
+<li>Make three age categories and inspect the first 10 subject rows.</li>
+<li>Filter Drug B and subjects aged 60 or older; report the number of records.</li>
+<li>Summarize mean and median by parameter and treatment. Explain why lab record count differs from subject count.</li>
+<li>Add a lab row with a made-up subject ID and compare inner and all-lab joins.</li>
+<li>Repeat the benchmarks on your computer and note whether conclusions differ.</li>
+</ol>
+</section>
+<section id="common-beginner-errors" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="common-beginner-errors"><span class="header-section-number">9.2</span> Common beginner errors</h2>
+<ul>
+<li>Use <code>DT[condition, .(columns)]</code> for clear data.table filtering.</li>
+<li>Remember <code>:=</code> updates by reference; use <code>copy()</code> when the original must remain unchanged.</li>
+<li><code>.N</code> counts rows, not unique subjects; use <code>uniqueN(USUBJID)</code> for subjects.</li>
+<li><code>mean()</code> returns <code>NA</code> if values are missing unless <code>na.rm = TRUE</code>; use that option only when appropriate.</li>
+<li>Repeated join keys can multiply rows. Check key uniqueness and expected join row counts.</li>
+<li>Sort and align columns before output comparisons; do not assume joins match without validation.</li>
+<li><code>setkey()</code> sorts and modifies a table. Include its cost if the workflow rebuilds the key every time.</li>
+<li>Benchmark results vary by machine. Report only values measured in this run.</li>
+</ul>
+</section>
+<section id="reviewer-checklist" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="reviewer-checklist"><span class="header-section-number">9.3</span> Reviewer checklist</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Both input datasets are synthetic and use project-relative paths.</label></li>
+<li><label><input type="checkbox">Filter, grouping, and missing-value rules are clear.</label></li>
+<li><label><input type="checkbox">Join key, direction, unmatched records, duplicate keys, and row counts are checked.</label></li>
+<li><label><input type="checkbox">Reference updates are intentional and copies protect required inputs.</label></li>
+<li><label><input type="checkbox">Base and data.table outputs pass equivalence checks before benchmarking.</label></li>
+<li><label><input type="checkbox">Benchmark inputs are identical and reported values come from the generated CSV.</label></li>
+<li><label><input type="checkbox">CSV outputs are under <code>results/</code> and contain expected columns.</label></li>
+</ul>
+</section>
+<section id="definition-of-done" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="definition-of-done"><span class="header-section-number">9.4</span> Definition of Done</h2>
+<p>The assignment is done when all outputs pass equivalence checks, requested summaries and benchmarks are saved, the performance note reports measured values only, and a beginner can run the scripts from the project root without changing paths.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
