@@ -1,0 +1,499 @@
+Subject ID,Assessment Date,Parameter,Parameter Name,Assessment Value,Assessment Unit
+VV-0001,2025-07-26,WEIGHT,Weight,82.6,kg
+VV-0001,2026-01-23,HR,Heart Rate,70.3,beats/min
+VV-0001,2026-02-17,SYSBP,Systolic Blood Pressure,129.3,mmHg
+VV-0002,2025-11-02,SYSBP,Systolic Blood Pressure,104.5,mmHg
+VV-0002,2026-02-13,SYSBP,Systolic Blood Pressure,133.9,mmHg
+VV-0002,2025-08-16,DIABP,Diastolic Blood Pressure,74.3,mmHg
+VV-0002,2025-11-09,TEMP,Temperature,36.9,C
+VV-0003,2025-08-13,WEIGHT,Weight,76.1,kg
+VV-0003,2025-03-30,TEMP,Temperature,36.3,C
+VV-0003,2025-01-21,HR,Heart Rate,84.0,beats/min
+VV-0003,2025-08-28,HR,Heart Rate,69.1,beats/min
+VV-0004,2026-07-05,HR,Heart Rate,70.5,beats/min
+VV-0004,2026-08-23,TEMP,Temperature,36.7,C
+VV-0005,2026-10-02,HR,Heart Rate,77.8,beats/min
+VV-0005,2026-05-15,SYSBP,Systolic Blood Pressure,125.2,mmHg
+VV-0005,2026-02-21,DIABP,Diastolic Blood Pressure,86.2,mmHg
+VV-0006,2026-09-08,HR,Heart Rate,72.0,beats/min
+VV-0006,2026-07-20,SYSBP,Systolic Blood Pressure,119.1,mmHg
+VV-0006,2026-05-21,WEIGHT,Weight,74.5,kg
+VV-0007,2025-03-07,HR,Heart Rate,81.3,beats/min
+VV-0007,2025-07-02,DIABP,Diastolic Blood Pressure,77.4,mmHg
+VV-0008,2026-03-03,DIABP,Diastolic Blood Pressure,80.8,mmHg
+VV-0008,2026-10-07,DIABP,Diastolic Blood Pressure,86.0,mmHg
+VV-0008,2026-04-06,WEIGHT,Weight,34.5,kg
+VV-0008,2026-01-30,HR,Heart Rate,94.9,beats/min
+VV-0009,2026-08-26,SYSBP,Systolic Blood Pressure,107.5,mmHg
+VV-0009,2026-08-09,DIABP,Diastolic Blood Pressure,82.9,mmHg
+VV-0009,2026-09-28,HR,Heart Rate,63.5,beats/min
+VV-0010,2024-06-30,SYSBP,Systolic Blood Pressure,125.9,mmHg
+VV-0010,2024-06-12,WEIGHT,Weight,77.1,kg
+VV-0010,2024-10-30,SYSBP,Systolic Blood Pressure,124.4,mmHg
+VV-0011,2026-10-10,HR,Heart Rate,85.9,beats/min
+VV-0011,2027-02-27,TEMP,Temperature,37.1,C
+VV-0011,2027-03-29,SYSBP,Systolic Blood Pressure,106.3,mmHg
+VV-0012,2025-02-23,HR,Heart Rate,77.0,beats/min
+VV-0012,2024-10-10,SYSBP,Systolic Blood Pressure,110.9,mmHg
+VV-0012,2025-03-26,SYSBP,Systolic Blood Pressure,119.2,mmHg
+VV-0012,2024-12-12,WEIGHT,Weight,79.6,kg
+VV-0013,2026-08-07,TEMP,Temperature,37.0,C
+VV-0013,2026-06-07,TEMP,Temperature,36.7,C
+VV-0013,2026-11-24,WEIGHT,Weight,88.5,kg
+VV-0014,2025-11-07,SYSBP,Systolic Blood Pressure,128.4,mmHg
+VV-0014,2025-05-23,HR,Heart Rate,71.0,beats/min
+VV-0014,2026-02-21,DIABP,Diastolic Blood Pressure,89.0,mmHg
+VV-0015,2026-04-14,HR,Heart Rate,72.3,beats/min
+VV-0015,2026-03-03,SYSBP,Systolic Blood Pressure,120.2,mmHg
+VV-0015,2025-08-16,SYSBP,Systolic Blood Pressure,106.8,mmHg
+VV-0016,2024-07-10,SYSBP,Systolic Blood Pressure,112.3,mmHg
+VV-0016,2024-07-15,DIABP,Diastolic Blood Pressure,67.4,mmHg
+VV-0017,2027-01-16,SYSBP,Systolic Blood Pressure,131.8,mmHg
+VV-0017,2027-01-15,TEMP,Temperature,36.7,C
+VV-0017,2027-03-10,WEIGHT,Weight,40.0,kg
+VV-0018,2026-11-10,TEMP,Temperature,37.8,C
+VV-0018,2026-11-04,WEIGHT,Weight,94.4,kg
+VV-0018,2027-06-30,WEIGHT,Weight,82.9,kg
+VV-0019,2026-10-02,TEMP,Temperature,37.1,C
+VV-0019,2026-11-20,HR,Heart Rate,76.8,beats/min
+VV-0020,2027-03-03,TEMP,Temperature,36.5,C
+VV-0020,2026-08-06,TEMP,Temperature,36.7,C
+VV-0020,2027-05-14,DIABP,Diastolic Blood Pressure,64.5,mmHg
+VV-0020,2026-12-05,HR,Heart Rate,73.0,beats/min
+VV-0021,2026-11-07,SYSBP,Systolic Blood Pressure,122.2,mmHg
+VV-0021,2026-12-09,HR,Heart Rate,87.9,beats/min
+VV-0022,2025-06-29,TEMP,Temperature,37.2,C
+VV-0022,2025-05-02,HR,Heart Rate,64.2,beats/min
+VV-0022,2025-12-20,SYSBP,Systolic Blood Pressure,117.3,mmHg
+VV-0023,2026-09-29,TEMP,Temperature,36.3,C
+VV-0023,2026-02-28,DIABP,Diastolic Blood Pressure,73.2,mmHg
+VV-0024,2024-12-18,HR,Heart Rate,76.2,beats/min
+VV-0024,2025-03-21,HR,Heart Rate,87.6,beats/min
+VV-0024,2024-09-27,SYSBP,Systolic Blood Pressure,121.5,mmHg
+VV-0025,2026-10-05,SYSBP,Systolic Blood Pressure,120.6,mmHg
+VV-0025,2027-04-02,WEIGHT,Weight,75.6,kg
+VV-0025,2026-07-26,WEIGHT,Weight,65.2,kg
+VV-0025,2027-03-23,WEIGHT,Weight,65.7,kg
+VV-0026,2025-12-20,HR,Heart Rate,61.6,beats/min
+VV-0026,2026-04-11,DIABP,Diastolic Blood Pressure,72.5,mmHg
+VV-0027,2024-08-19,TEMP,Temperature,37.3,C
+VV-0027,2024-07-23,HR,Heart Rate,67.3,beats/min
+VV-0027,2025-02-14,HR,Heart Rate,76.8,beats/min
+VV-0027,2025-01-16,WEIGHT,Weight,63.3,kg
+VV-0028,2025-07-02,DIABP,Diastolic Blood Pressure,76.5,mmHg
+VV-0028,2024-11-06,WEIGHT,Weight,73.2,kg
+VV-0029,2025-12-26,DIABP,Diastolic Blood Pressure,73.5,mmHg
+VV-0029,2026-11-29,HR,Heart Rate,60.3,beats/min
+VV-0030,2024-08-17,DIABP,Diastolic Blood Pressure,73.6,mmHg
+VV-0030,2024-11-24,DIABP,Diastolic Blood Pressure,82.6,mmHg
+VV-0030,2024-11-08,WEIGHT,Weight,97.8,kg
+VV-0030,2024-12-02,WEIGHT,Weight,69.7,kg
+VV-0031,2026-05-05,TEMP,Temperature,36.4,C
+VV-0031,2026-06-13,SYSBP,Systolic Blood Pressure,112.2,mmHg
+VV-0031,2026-05-15,DIABP,Diastolic Blood Pressure,68.2,mmHg
+VV-0031,2026-09-13,SYSBP,Systolic Blood Pressure,120.4,mmHg
+VV-0032,2025-06-11,TEMP,Temperature,36.2,C
+VV-0032,2024-10-01,SYSBP,Systolic Blood Pressure,124.0,mmHg
+VV-0032,2024-09-05,SYSBP,Systolic Blood Pressure,130.0,mmHg
+VV-0032,2025-01-26,TEMP,Temperature,36.0,C
+VV-0033,2025-01-18,TEMP,Temperature,36.5,C
+VV-0033,2024-04-27,WEIGHT,Weight,74.2,kg
+VV-0033,2025-02-03,HR,Heart Rate,79.6,beats/min
+VV-0034,2025-08-11,DIABP,Diastolic Blood Pressure,79.4,mmHg
+VV-0034,2025-05-01,DIABP,Diastolic Blood Pressure,66.7,mmHg
+VV-0034,2025-06-13,SYSBP,Systolic Blood Pressure,118.7,mmHg
+VV-0035,2026-04-12,TEMP,Temperature,37.0,C
+VV-0035,2026-04-01,HR,Heart Rate,63.1,beats/min
+VV-0035,2025-11-27,WEIGHT,Weight,70.6,kg
+VV-0035,2025-11-09,WEIGHT,Weight,92.0,kg
+VV-0036,2024-11-28,HR,Heart Rate,77.9,beats/min
+VV-0036,2025-03-06,DIABP,Diastolic Blood Pressure,79.5,mmHg
+VV-0037,2025-07-11,DIABP,Diastolic Blood Pressure,83.7,mmHg
+VV-0037,2025-12-07,HR,Heart Rate,83.6,beats/min
+VV-0037,2025-09-29,DIABP,Diastolic Blood Pressure,71.7,mmHg
+VV-0038,2026-12-29,WEIGHT,Weight,59.6,kg
+VV-0038,2027-03-13,TEMP,Temperature,35.9,C
+VV-0038,2026-09-20,TEMP,Temperature,37.0,C
+VV-0039,2026-03-05,HR,Heart Rate,74.8,beats/min
+VV-0039,2026-03-28,WEIGHT,Weight,73.6,kg
+VV-0040,2026-10-21,WEIGHT,Weight,65.6,kg
+VV-0040,2026-11-30,TEMP,Temperature,37.2,C
+VV-0040,2026-11-21,DIABP,Diastolic Blood Pressure,76.6,mmHg
+VV-0040,2026-12-03,TEMP,Temperature,36.5,C
+VV-0041,2026-12-22,WEIGHT,Weight,90.2,kg
+VV-0041,2026-09-02,WEIGHT,Weight,81.6,kg
+VV-0041,2026-05-29,TEMP,Temperature,36.8,C
+VV-0041,2026-03-18,TEMP,Temperature,37.1,C
+VV-0042,2025-10-06,DIABP,Diastolic Blood Pressure,75.6,mmHg
+VV-0042,2026-04-29,TEMP,Temperature,36.6,C
+VV-0043,2026-07-28,HR,Heart Rate,74.6,beats/min
+VV-0043,2026-02-06,WEIGHT,Weight,47.3,kg
+VV-0044,2026-06-28,TEMP,Temperature,36.3,C
+VV-0044,2026-07-07,HR,Heart Rate,80.0,beats/min
+VV-0044,2026-07-06,DIABP,Diastolic Blood Pressure,90.2,mmHg
+VV-0044,2025-12-20,SYSBP,Systolic Blood Pressure,134.6,mmHg
+VV-0045,2027-06-21,WEIGHT,Weight,77.1,kg
+VV-0045,2027-02-12,SYSBP,Systolic Blood Pressure,116.0,mmHg
+VV-0046,2024-06-08,WEIGHT,Weight,69.6,kg
+VV-0046,2024-09-12,WEIGHT,Weight,77.4,kg
+VV-0047,2025-06-12,WEIGHT,Weight,88.3,kg
+VV-0047,2024-12-31,DIABP,Diastolic Blood Pressure,66.1,mmHg
+VV-0047,2025-06-28,SYSBP,Systolic Blood Pressure,89.4,mmHg
+VV-0047,2025-07-14,HR,Heart Rate,83.3,beats/min
+VV-0048,2026-10-11,HR,Heart Rate,56.0,beats/min
+VV-0048,2027-01-13,HR,Heart Rate,79.4,beats/min
+VV-0048,2027-04-27,SYSBP,Systolic Blood Pressure,129.1,mmHg
+VV-0048,2027-07-01,TEMP,Temperature,36.6,C
+VV-0049,2024-11-01,WEIGHT,Weight,80.5,kg
+VV-0049,2024-05-24,DIABP,Diastolic Blood Pressure,66.2,mmHg
+VV-0050,2026-05-23,DIABP,Diastolic Blood Pressure,87.6,mmHg
+VV-0050,2026-09-06,TEMP,Temperature,36.7,C
+VV-0050,2026-09-01,HR,Heart Rate,73.7,beats/min
+VV-0050,2026-07-23,HR,Heart Rate,64.7,beats/min
+VV-0051,2024-07-18,TEMP,Temperature,36.2,C
+VV-0051,2024-11-13,DIABP,Diastolic Blood Pressure,89.8,mmHg
+VV-0051,2024-09-15,SYSBP,Systolic Blood Pressure,117.5,mmHg
+VV-0052,2024-07-23,WEIGHT,Weight,84.5,kg
+VV-0052,2024-06-14,DIABP,Diastolic Blood Pressure,74.1,mmHg
+VV-0052,2024-08-19,DIABP,Diastolic Blood Pressure,95.3,mmHg
+VV-0052,2024-02-01,HR,Heart Rate,67.9,beats/min
+VV-0053,2024-07-12,SYSBP,Systolic Blood Pressure,111.0,mmHg
+VV-0053,2024-09-24,WEIGHT,Weight,81.4,kg
+VV-0053,2024-09-06,HR,Heart Rate,67.2,beats/min
+VV-0053,2024-06-22,TEMP,Temperature,37.6,C
+VV-0054,2025-01-30,WEIGHT,Weight,91.8,kg
+VV-0054,2025-09-25,DIABP,Diastolic Blood Pressure,72.7,mmHg
+VV-0054,2025-06-17,SYSBP,Systolic Blood Pressure,107.4,mmHg
+VV-0054,2025-09-10,WEIGHT,Weight,82.5,kg
+VV-0055,2025-12-25,TEMP,Temperature,37.4,C
+VV-0055,2026-03-03,HR,Heart Rate,70.8,beats/min
+VV-0055,2026-09-12,WEIGHT,Weight,71.5,kg
+VV-0055,2026-10-04,SYSBP,Systolic Blood Pressure,135.9,mmHg
+VV-0056,2026-10-12,DIABP,Diastolic Blood Pressure,95.3,mmHg
+VV-0056,2026-04-15,TEMP,Temperature,36.5,C
+VV-0056,2026-06-24,WEIGHT,Weight,88.0,kg
+VV-0057,2025-09-14,DIABP,Diastolic Blood Pressure,82.1,mmHg
+VV-0057,2025-07-07,DIABP,Diastolic Blood Pressure,82.3,mmHg
+VV-0057,2025-04-21,TEMP,Temperature,37.2,C
+VV-0057,2025-03-10,DIABP,Diastolic Blood Pressure,75.1,mmHg
+VV-0058,2026-04-11,WEIGHT,Weight,47.5,kg
+VV-0058,2027-01-02,TEMP,Temperature,37.6,C
+VV-0058,2026-09-07,SYSBP,Systolic Blood Pressure,106.8,mmHg
+VV-0058,2026-06-02,TEMP,Temperature,36.7,C
+VV-0059,2025-01-31,SYSBP,Systolic Blood Pressure,130.3,mmHg
+VV-0059,2025-11-01,DIABP,Diastolic Blood Pressure,73.3,mmHg
+VV-0059,2025-12-11,DIABP,Diastolic Blood Pressure,76.7,mmHg
+VV-0060,2024-08-25,HR,Heart Rate,78.9,beats/min
+VV-0060,2025-03-11,DIABP,Diastolic Blood Pressure,83.9,mmHg
+VV-0061,2025-12-04,WEIGHT,Weight,77.5,kg
+VV-0061,2025-11-07,WEIGHT,Weight,56.8,kg
+VV-0061,2025-08-04,DIABP,Diastolic Blood Pressure,81.2,mmHg
+VV-0062,2027-01-22,HR,Heart Rate,74.2,beats/min
+VV-0062,2026-04-10,SYSBP,Systolic Blood Pressure,123.7,mmHg
+VV-0062,2026-08-26,DIABP,Diastolic Blood Pressure,91.6,mmHg
+VV-0062,2026-06-17,TEMP,Temperature,36.9,C
+VV-0063,2026-04-30,DIABP,Diastolic Blood Pressure,88.3,mmHg
+VV-0063,2026-04-30,SYSBP,Systolic Blood Pressure,128.1,mmHg
+VV-0063,2026-05-04,TEMP,Temperature,36.7,C
+VV-0063,2026-10-15,SYSBP,Systolic Blood Pressure,105.3,mmHg
+VV-0064,2026-04-22,TEMP,Temperature,36.6,C
+VV-0064,2025-11-07,TEMP,Temperature,37.0,C
+VV-0065,2025-08-09,DIABP,Diastolic Blood Pressure,81.6,mmHg
+VV-0065,2025-06-21,TEMP,Temperature,37.3,C
+VV-0065,2025-06-16,HR,Heart Rate,67.9,beats/min
+VV-0066,2025-11-28,TEMP,Temperature,36.8,C
+VV-0066,2026-03-08,HR,Heart Rate,78.2,beats/min
+VV-0066,2026-02-07,SYSBP,Systolic Blood Pressure,109.4,mmHg
+VV-0067,2026-06-20,SYSBP,Systolic Blood Pressure,122.7,mmHg
+VV-0067,2026-06-02,SYSBP,Systolic Blood Pressure,131.2,mmHg
+VV-0067,2026-06-08,HR,Heart Rate,59.8,beats/min
+VV-0067,2027-01-15,HR,Heart Rate,56.4,beats/min
+VV-0068,2026-08-24,TEMP,Temperature,36.9,C
+VV-0068,2027-04-10,SYSBP,Systolic Blood Pressure,138.5,mmHg
+VV-0068,2026-12-27,WEIGHT,Weight,103.1,kg
+VV-0068,2027-03-04,HR,Heart Rate,94.6,beats/min
+VV-0069,2025-10-13,HR,Heart Rate,65.8,beats/min
+VV-0069,2025-07-01,DIABP,Diastolic Blood Pressure,78.0,mmHg
+VV-0069,2026-04-18,DIABP,Diastolic Blood Pressure,76.6,mmHg
+VV-0069,2026-04-29,DIABP,Diastolic Blood Pressure,74.4,mmHg
+VV-0070,2026-02-25,SYSBP,Systolic Blood Pressure,106.3,mmHg
+VV-0070,2025-10-10,SYSBP,Systolic Blood Pressure,117.7,mmHg
+VV-0070,2025-09-01,DIABP,Diastolic Blood Pressure,72.3,mmHg
+VV-0071,2026-07-10,SYSBP,Systolic Blood Pressure,138.2,mmHg
+VV-0071,2026-05-03,DIABP,Diastolic Blood Pressure,83.0,mmHg
+VV-0071,2027-01-19,TEMP,Temperature,36.4,C
+VV-0072,2024-08-06,TEMP,Temperature,36.4,C
+VV-0072,2024-09-17,SYSBP,Systolic Blood Pressure,115.5,mmHg
+VV-0072,2024-09-19,SYSBP,Systolic Blood Pressure,133.1,mmHg
+VV-0072,2024-12-09,TEMP,Temperature,37.6,C
+VV-0073,2025-10-10,HR,Heart Rate,75.4,beats/min
+VV-0073,2025-06-12,HR,Heart Rate,56.3,beats/min
+VV-0074,2026-10-10,DIABP,Diastolic Blood Pressure,82.1,mmHg
+VV-0074,2027-01-03,TEMP,Temperature,36.6,C
+VV-0074,2026-12-28,TEMP,Temperature,36.3,C
+VV-0074,2026-12-05,WEIGHT,Weight,34.8,kg
+VV-0075,2025-03-29,DIABP,Diastolic Blood Pressure,73.2,mmHg
+VV-0075,2025-08-09,DIABP,Diastolic Blood Pressure,81.8,mmHg
+VV-0075,2026-01-19,SYSBP,Systolic Blood Pressure,108.0,mmHg
+VV-0075,2025-08-06,TEMP,Temperature,36.9,C
+VV-0076,2026-12-20,HR,Heart Rate,72.0,beats/min
+VV-0076,2026-09-30,SYSBP,Systolic Blood Pressure,109.5,mmHg
+VV-0076,2026-07-25,SYSBP,Systolic Blood Pressure,110.1,mmHg
+VV-0077,2026-12-10,DIABP,Diastolic Blood Pressure,89.9,mmHg
+VV-0077,2026-07-16,SYSBP,Systolic Blood Pressure,116.7,mmHg
+VV-0078,2025-03-20,SYSBP,Systolic Blood Pressure,128.8,mmHg
+VV-0078,2025-06-16,TEMP,Temperature,36.7,C
+VV-0078,2025-06-16,SYSBP,Systolic Blood Pressure,120.8,mmHg
+VV-0078,2024-10-14,DIABP,Diastolic Blood Pressure,82.1,mmHg
+VV-0079,2025-07-24,HR,Heart Rate,60.4,beats/min
+VV-0079,2025-09-23,SYSBP,Systolic Blood Pressure,125.6,mmHg
+VV-0080,2024-06-21,TEMP,Temperature,36.5,C
+VV-0080,2024-10-22,WEIGHT,Weight,77.8,kg
+VV-0080,2024-07-24,SYSBP,Systolic Blood Pressure,133.8,mmHg
+VV-0081,2026-06-18,TEMP,Temperature,37.1,C
+VV-0081,2026-03-05,WEIGHT,Weight,77.5,kg
+VV-0081,2026-02-18,HR,Heart Rate,70.3,beats/min
+VV-0082,2026-12-14,TEMP,Temperature,35.6,C
+VV-0082,2027-06-15,SYSBP,Systolic Blood Pressure,125.2,mmHg
+VV-0083,2026-11-29,TEMP,Temperature,37.6,C
+VV-0083,2027-01-03,HR,Heart Rate,74.2,beats/min
+VV-0083,2026-02-28,WEIGHT,Weight,64.8,kg
+VV-0083,2026-03-03,SYSBP,Systolic Blood Pressure,117.8,mmHg
+VV-0084,2026-10-29,HR,Heart Rate,66.0,beats/min
+VV-0084,2026-07-18,WEIGHT,Weight,68.2,kg
+VV-0085,2025-11-03,DIABP,Diastolic Blood Pressure,80.6,mmHg
+VV-0085,2025-06-19,HR,Heart Rate,71.5,beats/min
+VV-0086,2025-02-15,SYSBP,Systolic Blood Pressure,130.6,mmHg
+VV-0086,2025-05-11,TEMP,Temperature,36.8,C
+VV-0086,2025-09-20,HR,Heart Rate,72.2,beats/min
+VV-0087,2024-07-18,WEIGHT,Weight,64.5,kg
+VV-0087,2024-07-14,WEIGHT,Weight,69.0,kg
+VV-0088,2025-02-13,TEMP,Temperature,36.2,C
+VV-0088,2025-02-22,TEMP,Temperature,37.2,C
+VV-0088,2024-09-11,TEMP,Temperature,36.5,C
+VV-0089,2026-01-10,DIABP,Diastolic Blood Pressure,74.4,mmHg
+VV-0089,2026-11-05,DIABP,Diastolic Blood Pressure,88.2,mmHg
+VV-0089,2026-06-12,HR,Heart Rate,74.7,beats/min
+VV-0090,2025-03-23,TEMP,Temperature,36.5,C
+VV-0090,2024-12-02,WEIGHT,Weight,66.0,kg
+VV-0090,2024-12-01,HR,Heart Rate,84.3,beats/min
+VV-0090,2024-11-24,WEIGHT,Weight,70.3,kg
+VV-0091,2025-01-21,TEMP,Temperature,36.4,C
+VV-0091,2024-11-21,SYSBP,Systolic Blood Pressure,120.3,mmHg
+VV-0091,2024-07-05,WEIGHT,Weight,94.8,kg
+VV-0092,2025-03-09,TEMP,Temperature,37.2,C
+VV-0092,2025-03-25,TEMP,Temperature,37.3,C
+VV-0092,2025-01-09,SYSBP,Systolic Blood Pressure,151.1,mmHg
+VV-0092,2024-08-18,WEIGHT,Weight,83.1,kg
+VV-0093,2025-11-29,HR,Heart Rate,71.0,beats/min
+VV-0093,2026-03-29,TEMP,Temperature,36.9,C
+VV-0094,2025-08-21,HR,Heart Rate,87.2,beats/min
+VV-0094,2025-03-10,SYSBP,Systolic Blood Pressure,118.6,mmHg
+VV-0094,2025-09-17,TEMP,Temperature,36.0,C
+VV-0095,2024-10-10,HR,Heart Rate,69.0,beats/min
+VV-0095,2025-01-11,SYSBP,Systolic Blood Pressure,130.1,mmHg
+VV-0095,2025-10-02,WEIGHT,Weight,82.7,kg
+VV-0095,2025-06-10,WEIGHT,Weight,71.7,kg
+VV-0096,2025-01-05,TEMP,Temperature,36.4,C
+VV-0096,2024-10-27,TEMP,Temperature,37.4,C
+VV-0097,2025-09-06,SYSBP,Systolic Blood Pressure,138.3,mmHg
+VV-0097,2026-04-22,TEMP,Temperature,37.2,C
+VV-0098,2026-08-15,SYSBP,Systolic Blood Pressure,119.7,mmHg
+VV-0098,2026-09-29,HR,Heart Rate,65.0,beats/min
+VV-0098,2026-12-13,HR,Heart Rate,77.2,beats/min
+VV-0099,2025-12-25,HR,Heart Rate,76.0,beats/min
+VV-0099,2026-08-29,HR,Heart Rate,76.8,beats/min
+VV-0099,2026-08-18,TEMP,Temperature,36.7,C
+VV-0100,2025-11-18,SYSBP,Systolic Blood Pressure,130.5,mmHg
+VV-0100,2026-02-24,WEIGHT,Weight,56.2,kg
+VV-0100,2025-07-24,HR,Heart Rate,75.3,beats/min
+VV-0100,2026-04-18,SYSBP,Systolic Blood Pressure,143.3,mmHg
+VV-0101,2026-04-01,DIABP,Diastolic Blood Pressure,82.1,mmHg
+VV-0101,2026-12-28,WEIGHT,Weight,77.5,kg
+VV-0102,2025-11-23,HR,Heart Rate,71.6,beats/min
+VV-0102,2026-04-01,SYSBP,Systolic Blood Pressure,128.1,mmHg
+VV-0102,2025-11-14,TEMP,Temperature,37.6,C
+VV-0103,2026-10-28,SYSBP,Systolic Blood Pressure,93.9,mmHg
+VV-0103,2026-05-17,TEMP,Temperature,37.1,C
+VV-0103,2026-09-27,DIABP,Diastolic Blood Pressure,73.7,mmHg
+VV-0104,2025-02-22,TEMP,Temperature,37.0,C
+VV-0104,2024-08-24,TEMP,Temperature,36.7,C
+VV-0105,2026-03-28,SYSBP,Systolic Blood Pressure,113.6,mmHg
+VV-0105,2026-10-13,HR,Heart Rate,82.1,beats/min
+VV-0105,2026-06-22,HR,Heart Rate,77.7,beats/min
+VV-0105,2026-04-11,HR,Heart Rate,92.4,beats/min
+VV-0106,2025-06-18,TEMP,Temperature,36.2,C
+VV-0106,2025-09-15,DIABP,Diastolic Blood Pressure,69.6,mmHg
+VV-0106,2026-03-17,SYSBP,Systolic Blood Pressure,107.2,mmHg
+VV-0107,2026-09-28,WEIGHT,Weight,73.5,kg
+VV-0107,2026-12-20,SYSBP,Systolic Blood Pressure,118.0,mmHg
+VV-0107,2026-07-01,DIABP,Diastolic Blood Pressure,78.6,mmHg
+VV-0108,2025-09-16,SYSBP,Systolic Blood Pressure,126.0,mmHg
+VV-0108,2025-11-03,WEIGHT,Weight,77.7,kg
+VV-0109,2027-04-03,SYSBP,Systolic Blood Pressure,98.0,mmHg
+VV-0109,2027-02-07,SYSBP,Systolic Blood Pressure,126.1,mmHg
+VV-0109,2027-06-30,TEMP,Temperature,37.3,C
+VV-0110,2025-10-07,WEIGHT,Weight,97.6,kg
+VV-0110,2025-11-10,SYSBP,Systolic Blood Pressure,135.8,mmHg
+VV-0111,2025-03-14,WEIGHT,Weight,76.1,kg
+VV-0111,2026-01-06,SYSBP,Systolic Blood Pressure,100.8,mmHg
+VV-0112,2027-02-18,DIABP,Diastolic Blood Pressure,82.4,mmHg
+VV-0112,2026-09-01,HR,Heart Rate,74.4,beats/min
+VV-0112,2026-09-01,HR,Heart Rate,91.0,beats/min
+VV-0113,2025-05-04,WEIGHT,Weight,66.4,kg
+VV-0113,2024-11-24,DIABP,Diastolic Blood Pressure,77.7,mmHg
+VV-0114,2024-12-30,TEMP,Temperature,36.2,C
+VV-0114,2025-01-29,HR,Heart Rate,73.2,beats/min
+VV-0114,2025-03-06,DIABP,Diastolic Blood Pressure,66.0,mmHg
+VV-0115,2026-07-25,HR,Heart Rate,70.9,beats/min
+VV-0115,2026-05-01,DIABP,Diastolic Blood Pressure,72.0,mmHg
+VV-0116,2025-04-07,TEMP,Temperature,36.8,C
+VV-0116,2025-07-07,HR,Heart Rate,72.4,beats/min
+VV-0117,2026-02-19,WEIGHT,Weight,70.5,kg
+VV-0117,2026-03-08,SYSBP,Systolic Blood Pressure,110.4,mmHg
+VV-0117,2025-03-31,HR,Heart Rate,84.8,beats/min
+VV-0118,2027-01-30,WEIGHT,Weight,49.8,kg
+VV-0118,2027-03-22,DIABP,Diastolic Blood Pressure,65.3,mmHg
+VV-0118,2026-04-12,DIABP,Diastolic Blood Pressure,80.1,mmHg
+VV-0119,2025-10-04,DIABP,Diastolic Blood Pressure,79.2,mmHg
+VV-0119,2026-02-04,HR,Heart Rate,90.1,beats/min
+VV-0119,2026-01-08,WEIGHT,Weight,87.6,kg
+VV-0120,2024-03-09,DIABP,Diastolic Blood Pressure,72.2,mmHg
+VV-0120,2024-03-13,SYSBP,Systolic Blood Pressure,117.5,mmHg
+VV-0120,2024-04-24,WEIGHT,Weight,61.2,kg
+VV-0120,2024-09-22,WEIGHT,Weight,73.2,kg
+VV-0121,2025-02-26,TEMP,Temperature,36.9,C
+VV-0121,2024-11-10,SYSBP,Systolic Blood Pressure,125.3,mmHg
+VV-0121,2025-01-29,HR,Heart Rate,63.1,beats/min
+VV-0122,2025-04-26,DIABP,Diastolic Blood Pressure,79.9,mmHg
+VV-0122,2025-10-07,DIABP,Diastolic Blood Pressure,85.6,mmHg
+VV-0122,2025-11-12,WEIGHT,Weight,79.0,kg
+VV-0122,2025-12-30,WEIGHT,Weight,66.4,kg
+VV-0123,2026-04-23,TEMP,Temperature,36.8,C
+VV-0123,2026-09-29,SYSBP,Systolic Blood Pressure,119.6,mmHg
+VV-0124,2026-09-25,DIABP,Diastolic Blood Pressure,79.3,mmHg
+VV-0124,2026-07-09,SYSBP,Systolic Blood Pressure,107.7,mmHg
+VV-0124,2026-08-25,HR,Heart Rate,86.7,beats/min
+VV-0124,2027-01-26,TEMP,Temperature,36.5,C
+VV-0125,2025-12-24,DIABP,Diastolic Blood Pressure,72.8,mmHg
+VV-0125,2025-10-01,TEMP,Temperature,37.5,C
+VV-0126,2025-03-02,WEIGHT,Weight,65.6,kg
+VV-0126,2024-12-01,DIABP,Diastolic Blood Pressure,89.1,mmHg
+VV-0127,2024-04-08,TEMP,Temperature,37.1,C
+VV-0127,2024-12-07,TEMP,Temperature,36.1,C
+VV-0127,2024-03-04,WEIGHT,Weight,93.3,kg
+VV-0128,2024-04-27,SYSBP,Systolic Blood Pressure,115.1,mmHg
+VV-0128,2024-12-06,DIABP,Diastolic Blood Pressure,69.2,mmHg
+VV-0128,2024-08-08,DIABP,Diastolic Blood Pressure,76.3,mmHg
+VV-0128,2024-06-21,SYSBP,Systolic Blood Pressure,116.3,mmHg
+VV-0129,2026-07-14,HR,Heart Rate,88.0,beats/min
+VV-0129,2025-12-10,SYSBP,Systolic Blood Pressure,113.3,mmHg
+VV-0130,2026-03-15,DIABP,Diastolic Blood Pressure,85.7,mmHg
+VV-0130,2026-10-07,HR,Heart Rate,90.2,beats/min
+VV-0131,2025-11-04,HR,Heart Rate,73.7,beats/min
+VV-0131,2025-08-19,SYSBP,Systolic Blood Pressure,123.4,mmHg
+VV-0131,2025-10-19,HR,Heart Rate,65.9,beats/min
+VV-0132,2026-06-13,DIABP,Diastolic Blood Pressure,74.5,mmHg
+VV-0132,2026-05-05,HR,Heart Rate,72.9,beats/min
+VV-0132,2026-09-13,SYSBP,Systolic Blood Pressure,118.9,mmHg
+VV-0132,2026-10-02,DIABP,Diastolic Blood Pressure,75.0,mmHg
+VV-0133,2026-03-27,HR,Heart Rate,71.0,beats/min
+VV-0133,2026-02-15,TEMP,Temperature,37.1,C
+VV-0133,2026-01-14,TEMP,Temperature,36.7,C
+VV-0134,2027-01-14,DIABP,Diastolic Blood Pressure,69.0,mmHg
+VV-0134,2026-08-18,WEIGHT,Weight,58.3,kg
+VV-0135,2025-11-30,TEMP,Temperature,37.0,C
+VV-0135,2025-03-06,SYSBP,Systolic Blood Pressure,98.4,mmHg
+VV-0135,2025-06-10,SYSBP,Systolic Blood Pressure,113.5,mmHg
+VV-0135,2025-05-01,WEIGHT,Weight,64.0,kg
+VV-0136,2025-10-27,HR,Heart Rate,63.3,beats/min
+VV-0136,2025-07-04,SYSBP,Systolic Blood Pressure,122.9,mmHg
+VV-0137,2026-08-26,HR,Heart Rate,48.7,beats/min
+VV-0137,2026-07-18,WEIGHT,Weight,71.0,kg
+VV-0137,2026-10-05,DIABP,Diastolic Blood Pressure,86.8,mmHg
+VV-0138,2025-08-16,WEIGHT,Weight,73.5,kg
+VV-0138,2026-01-31,HR,Heart Rate,100.4,beats/min
+VV-0138,2026-02-03,HR,Heart Rate,59.0,beats/min
+VV-0139,2026-02-04,SYSBP,Systolic Blood Pressure,121.2,mmHg
+VV-0139,2025-07-18,HR,Heart Rate,77.1,beats/min
+VV-0140,2027-02-04,WEIGHT,Weight,80.3,kg
+VV-0140,2026-12-14,TEMP,Temperature,36.8,C
+VV-0141,2026-05-23,SYSBP,Systolic Blood Pressure,112.2,mmHg
+VV-0141,2027-05-04,SYSBP,Systolic Blood Pressure,112.9,mmHg
+VV-0141,2027-02-10,TEMP,Temperature,37.3,C
+VV-0141,2026-12-03,TEMP,Temperature,35.9,C
+VV-0142,2026-09-09,DIABP,Diastolic Blood Pressure,79.8,mmHg
+VV-0142,2027-02-05,TEMP,Temperature,36.8,C
+VV-0142,2026-05-17,HR,Heart Rate,76.9,beats/min
+VV-0142,2026-11-08,DIABP,Diastolic Blood Pressure,82.2,mmHg
+VV-0143,2027-03-26,HR,Heart Rate,72.1,beats/min
+VV-0143,2027-02-01,WEIGHT,Weight,90.9,kg
+VV-0143,2027-05-21,TEMP,Temperature,37.0,C
+VV-0144,2026-03-01,DIABP,Diastolic Blood Pressure,79.6,mmHg
+VV-0144,2026-10-09,DIABP,Diastolic Blood Pressure,77.9,mmHg
+VV-0145,2025-06-18,DIABP,Diastolic Blood Pressure,85.6,mmHg
+VV-0145,2025-04-11,WEIGHT,Weight,64.2,kg
+VV-0145,2024-12-27,SYSBP,Systolic Blood Pressure,124.9,mmHg
+VV-0145,2025-06-24,TEMP,Temperature,36.4,C
+VV-0146,2024-10-25,SYSBP,Systolic Blood Pressure,130.3,mmHg
+VV-0146,2024-12-03,DIABP,Diastolic Blood Pressure,85.6,mmHg
+VV-0147,2026-09-24,TEMP,Temperature,37.0,C
+VV-0147,2026-09-17,SYSBP,Systolic Blood Pressure,129.6,mmHg
+VV-0147,2026-09-20,SYSBP,Systolic Blood Pressure,129.1,mmHg
+VV-0147,2027-01-19,HR,Heart Rate,85.9,beats/min
+VV-0148,2026-03-24,SYSBP,Systolic Blood Pressure,118.0,mmHg
+VV-0148,2026-07-15,HR,Heart Rate,66.6,beats/min
+VV-0149,2027-02-03,HR,Heart Rate,76.1,beats/min
+VV-0149,2026-11-20,TEMP,Temperature,36.8,C
+VV-0150,2025-08-15,WEIGHT,Weight,64.2,kg
+VV-0150,2025-09-27,HR,Heart Rate,64.6,beats/min
+VV-0150,2025-10-27,HR,Heart Rate,82.3,beats/min
+VV-0151,2026-08-14,DIABP,Diastolic Blood Pressure,68.1,mmHg
+VV-0151,2026-04-30,DIABP,Diastolic Blood Pressure,78.5,mmHg
+VV-0152,2024-11-30,TEMP,Temperature,36.3,C
+VV-0152,2024-08-23,DIABP,Diastolic Blood Pressure,53.8,mmHg
+VV-0152,2025-03-08,TEMP,Temperature,36.9,C
+VV-0153,2024-12-29,HR,Heart Rate,82.1,beats/min
+VV-0153,2024-07-31,HR,Heart Rate,64.3,beats/min
+VV-0154,2025-03-18,HR,Heart Rate,84.6,beats/min
+VV-0154,2025-04-16,WEIGHT,Weight,113.6,kg
+VV-0154,2024-11-16,SYSBP,Systolic Blood Pressure,124.7,mmHg
+VV-0154,2024-11-17,HR,Heart Rate,68.9,beats/min
+VV-0155,2026-05-02,WEIGHT,Weight,77.1,kg
+VV-0155,2026-05-14,DIABP,Diastolic Blood Pressure,71.4,mmHg
+VV-0155,2026-03-29,WEIGHT,Weight,90.7,kg
+VV-0156,2025-02-01,DIABP,Diastolic Blood Pressure,84.6,mmHg
+VV-0156,2025-02-25,TEMP,Temperature,36.5,C
+VV-0156,2025-06-10,DIABP,Diastolic Blood Pressure,72.7,mmHg
+VV-0157,2026-09-24,DIABP,Diastolic Blood Pressure,85.0,mmHg
+VV-0157,2026-06-18,WEIGHT,Weight,78.7,kg
+VV-0157,2026-09-17,WEIGHT,Weight,77.7,kg
+VV-0158,2025-06-06,TEMP,Temperature,36.9,C
+VV-0158,2024-11-29,DIABP,Diastolic Blood Pressure,73.3,mmHg
+VV-0159,2026-08-05,DIABP,Diastolic Blood Pressure,87.9,mmHg
+VV-0159,2026-04-12,SYSBP,Systolic Blood Pressure,121.1,mmHg
+VV-0159,2027-03-02,HR,Heart Rate,76.0,beats/min
+VV-0160,2024-09-22,WEIGHT,Weight,91.9,kg
+VV-0160,2025-03-30,WEIGHT,Weight,73.0,kg
+VV-0160,2025-07-05,DIABP,Diastolic Blood Pressure,74.4,mmHg
+VV-0161,2025-08-28,SYSBP,Systolic Blood Pressure,113.4,mmHg
+VV-0161,2025-11-09,TEMP,Temperature,36.3,C
+VV-0162,2026-01-02,HR,Heart Rate,77.3,beats/min
+VV-0162,2026-04-13,HR,Heart Rate,77.0,beats/min
+VV-0162,2026-02-10,SYSBP,Systolic Blood Pressure,127.5,mmHg
+VV-0163,2025-09-19,WEIGHT,Weight,84.4,kg
+VV-0163,2025-02-24,WEIGHT,Weight,60.0,kg
+VV-0163,2025-06-28,WEIGHT,Weight,53.2,kg
+VV-0164,2025-01-20,WEIGHT,Weight,58.3,kg
+VV-0164,2024-11-02,DIABP,Diastolic Blood Pressure,91.1,mmHg
+VV-0164,2024-12-26,DIABP,Diastolic Blood Pressure,70.8,mmHg
+VV-0164,2024-10-26,WEIGHT,Weight,83.9,kg
+VV-0165,2026-03-07,DIABP,Diastolic Blood Pressure,76.7,mmHg
+VV-0165,2026-03-08,HR,Heart Rate,74.4,beats/min
+VV-0165,2026-11-21,HR,Heart Rate,64.0,beats/min
+VV-0166,2024-06-06,TEMP,Temperature,36.7,C
+VV-0166,2024-03-15,TEMP,Temperature,37.8,C
+VV-0166,2024-06-10,DIABP,Diastolic Blood Pressure,84.3,mmHg
+VV-0166,2024-05-10,TEMP,Temperature,36.8,C
+VV-0167,2025-10-29,WEIGHT,Weight,90.6,kg
+VV-0167,2025-12-10,WEIGHT,Weight,85.0,kg

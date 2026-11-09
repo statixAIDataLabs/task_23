@@ -1,0 +1,246 @@
+Subject ID,Reported Term,Onset Date,Resolution Date,Severity,Serious?,Relatedness,Status
+VV-0001,Anaemia,2026-03-01,2026-03-13,Moderate,Yes,Unlikely,Not Recovered
+VV-0001,Pyrexia,2025-10-06,2025-10-10,Severe,No,Not Related,Unknown
+VV-0001,Anaemia,2026-04-23,2026-05-11,Moderate,No,Unlikely,Recovered
+VV-0002,Pyrexia,2025-08-04,2025-08-06,Mild,No,Not Related,Not Recovered
+VV-0003,Neutropenia,2025-08-25,2025-08-27,Moderate,No,Possible,Unknown
+VV-0004,Headache,2026-08-18,2026-08-18,Severe,No,Probable,Not Recovered
+VV-0004,Rash,2026-08-10,,Severe,No,Not Related,Recovering
+VV-0004,Headache,2026-05-16,2026-05-23,Severe,No,Possible,Unknown
+VV-0007,Pyrexia,2025-05-25,2025-06-05,Mild,No,Not Related,Recovered
+VV-0008,Diarrhoea,2026-06-20,,Severe,No,Not Related,Recovering
+VV-0008,Rash,2026-03-04,2026-03-15,Severe,No,Possible,Unknown
+VV-0008,Headache,2025-11-05,,Severe,No,Unlikely,Recovered
+VV-0009,Neutropenia,2026-06-19,,Moderate,No,Unlikely,Recovered
+VV-0010,Nausea,2024-12-14,2024-12-18,Moderate,No,Unlikely,Unknown
+VV-0011,Diarrhoea,2026-12-21,,Mild,No,Not Related,Recovering
+VV-0011,Diarrhoea,2026-11-30,2026-12-15,Moderate,No,Possible,Unknown
+VV-0011,Nausea,2026-09-30,2026-10-10,Mild,No,Possible,Not Recovered
+VV-0012,Pyrexia,2024-07-27,,Severe,No,Unlikely,Recovered
+VV-0012,Headache,2025-01-20,,Moderate,No,Unlikely,Unknown
+VV-0013,Fatigue,2026-07-06,,Severe,No,Probable,Recovered
+VV-0013,Rash,2026-08-14,2026-08-21,Mild,Yes,Unlikely,Recovering
+VV-0016,Anaemia,2024-12-10,2024-12-24,Severe,No,Possible,Recovering
+VV-0016,Pyrexia,2024-10-19,2024-11-07,Severe,No,Not Related,Recovered
+VV-0017,Headache,2027-01-10,2027-01-13,Mild,No,Probable,Unknown
+VV-0019,Diarrhoea,2026-12-23,,Moderate,No,Unlikely,Recovering
+VV-0019,Anaemia,2026-10-15,2026-10-17,Mild,No,Unlikely,Unknown
+VV-0019,Anaemia,2026-07-14,,Moderate,No,Not Related,Recovered
+VV-0021,Headache,2027-01-16,2027-02-01,Mild,No,Probable,Not Recovered
+VV-0022,Pyrexia,2026-01-09,2026-01-29,Moderate,No,Possible,Not Recovered
+VV-0023,Headache,2026-09-30,2026-10-20,Mild,Yes,Possible,Recovering
+VV-0023,Fatigue,2026-06-11,,Severe,Yes,Possible,Not Recovered
+VV-0024,Rash,2025-02-12,2025-02-13,Mild,No,Probable,Recovered
+VV-0024,Rash,2025-01-22,2025-02-03,Moderate,No,Probable,Unknown
+VV-0024,Rash,2025-03-24,,Mild,No,Unlikely,Unknown
+VV-0025,Fatigue,2026-07-01,2026-07-12,Mild,No,Possible,Unknown
+VV-0025,Anaemia,2026-12-19,,Severe,No,Unlikely,Recovering
+VV-0025,Anaemia,2027-03-15,2027-03-29,Mild,No,Possible,Recovered
+VV-0026,Diarrhoea,2026-08-29,2026-09-15,Moderate,No,Probable,Recovered
+VV-0028,Fatigue,2025-03-07,2025-03-21,Severe,No,Unlikely,Not Recovered
+VV-0029,Diarrhoea,2026-04-03,2026-04-13,Severe,No,Probable,Not Recovered
+VV-0029,Diarrhoea,2026-04-21,2026-05-01,Mild,No,Possible,Recovered
+VV-0029,Anaemia,2026-02-23,2026-02-23,Mild,No,Unlikely,Unknown
+VV-0030,Nausea,2025-03-25,,Moderate,No,Unlikely,Recovered
+VV-0032,Fatigue,2025-02-04,2025-02-24,Mild,No,Not Related,Not Recovered
+VV-0035,Diarrhoea,2025-08-24,2025-09-12,Moderate,No,Not Related,Recovering
+VV-0036,Neutropenia,2024-08-13,2024-08-19,Moderate,No,Possible,Unknown
+VV-0037,Headache,2025-04-26,,Moderate,No,Unlikely,Recovering
+VV-0038,Diarrhoea,2026-09-28,2026-10-09,Severe,No,Unlikely,Recovered
+VV-0039,Neutropenia,2026-04-17,2026-04-23,Mild,No,Unlikely,Unknown
+VV-0039,Headache,2025-10-12,2025-10-24,Moderate,No,Not Related,Recovering
+VV-0039,Diarrhoea,2025-08-05,2025-08-21,Mild,No,Probable,Not Recovered
+VV-0041,Neutropenia,2026-05-22,2026-06-04,Moderate,No,Not Related,Not Recovered
+VV-0041,Pyrexia,2026-04-27,2026-05-01,Severe,Yes,Possible,Not Recovered
+VV-0042,Headache,2025-06-18,2025-07-05,Mild,No,Probable,Recovered
+VV-0042,Pyrexia,2025-08-05,2025-08-17,Mild,No,Not Related,Unknown
+VV-0043,Anaemia,2026-01-30,2026-02-03,Mild,No,Unlikely,Not Recovered
+VV-0043,Anaemia,2026-06-29,,Moderate,No,Not Related,Not Recovered
+VV-0043,Rash,2026-05-02,2026-05-11,Severe,No,Unlikely,Unknown
+VV-0045,Neutropenia,2027-03-22,2027-04-08,Severe,No,Unlikely,Unknown
+VV-0045,Headache,2026-12-18,,Mild,No,Unlikely,Not Recovered
+VV-0045,Headache,2026-09-30,2026-10-12,Mild,No,Not Related,Not Recovered
+VV-0046,Neutropenia,2024-09-02,,Mild,Yes,Not Related,Recovered
+VV-0048,Anaemia,2027-04-08,2027-04-08,Moderate,No,Unlikely,Recovered
+VV-0048,Pyrexia,2026-12-02,2026-12-05,Mild,No,Unlikely,Recovered
+VV-0050,Pyrexia,2026-08-18,2026-08-25,Moderate,No,Unlikely,Not Recovered
+VV-0051,Diarrhoea,2024-06-20,2024-07-06,Moderate,No,Probable,Unknown
+VV-0052,Headache,2024-06-08,2024-06-26,Mild,No,Not Related,Unknown
+VV-0053,Headache,2024-05-29,,Mild,No,Unlikely,Recovering
+VV-0053,Anaemia,2024-09-08,2024-09-11,Severe,No,Unlikely,Recovering
+VV-0053,Neutropenia,2024-02-02,,Moderate,No,Probable,Unknown
+VV-0054,Diarrhoea,2025-07-27,2025-08-07,Mild,Yes,Probable,Recovering
+VV-0054,Pyrexia,2025-01-28,2025-02-13,Severe,No,Unlikely,Not Recovered
+VV-0054,Rash,2025-09-03,2025-09-18,Severe,No,Possible,Recovered
+VV-0056,Fatigue,2026-03-31,2026-04-03,Moderate,No,Unlikely,Recovered
+VV-0056,Rash,2026-11-20,2026-11-30,Severe,No,Possible,Recovered
+VV-0057,Nausea,2025-03-14,2025-03-26,Moderate,No,Unlikely,Recovering
+VV-0057,Headache,2024-12-20,,Moderate,No,Possible,Recovering
+VV-0057,Rash,2024-12-05,2024-12-15,Severe,No,Possible,Unknown
+VV-0058,Headache,2026-02-11,2026-02-26,Mild,No,Possible,Unknown
+VV-0059,Anaemia,2025-09-29,2025-10-17,Moderate,No,Not Related,Recovering
+VV-0059,Rash,2025-07-27,2025-08-16,Moderate,No,Not Related,Not Recovered
+VV-0059,Headache,2025-02-13,2025-03-02,Moderate,No,Not Related,Unknown
+VV-0060,Nausea,2024-12-10,,Mild,No,Possible,Unknown
+VV-0062,Fatigue,2026-04-26,2026-05-13,Severe,No,Not Related,Not Recovered
+VV-0064,Rash,2025-08-18,,Severe,No,Unlikely,Unknown
+VV-0064,Fatigue,2026-04-24,2026-05-11,Moderate,Yes,Unlikely,Recovered
+VV-0064,Neutropenia,2026-03-18,2026-03-29,Severe,No,Not Related,Unknown
+VV-0065,Rash,2025-04-27,2025-05-17,Mild,No,Not Related,Unknown
+VV-0065,Anaemia,2025-08-19,2025-08-19,Moderate,No,Not Related,Recovered
+VV-0066,Nausea,2025-09-24,2025-10-07,Moderate,No,Unlikely,Recovered
+VV-0066,Rash,2025-10-09,2025-10-13,Moderate,No,Not Related,Recovering
+VV-0066,Pyrexia,2025-10-13,,Mild,No,Probable,Recovering
+VV-0067,Neutropenia,2026-05-23,2026-06-05,Moderate,No,Not Related,Recovering
+VV-0067,Headache,2026-04-23,,Mild,No,Probable,Recovered
+VV-0068,Fatigue,2026-10-22,2026-10-30,Moderate,No,Probable,Not Recovered
+VV-0068,Nausea,2026-12-24,2026-12-27,Severe,No,Unlikely,Not Recovered
+VV-0069,Diarrhoea,2026-04-13,,Moderate,No,Not Related,Unknown
+VV-0069,Nausea,2025-08-04,2025-08-20,Mild,No,Unlikely,Not Recovered
+VV-0070,Neutropenia,2025-08-27,2025-09-01,Mild,No,Possible,Recovered
+VV-0070,Pyrexia,2025-06-26,,Mild,No,Not Related,Recovering
+VV-0071,Neutropenia,2026-09-17,2026-09-25,Severe,No,Probable,Recovering
+VV-0072,Headache,2024-07-17,,Severe,No,Not Related,Recovered
+VV-0072,Nausea,2024-12-06,2024-12-09,Severe,No,Unlikely,Recovering
+VV-0072,Nausea,2024-07-08,2024-07-28,Mild,No,Not Related,Not Recovered
+VV-0073,Pyrexia,2025-03-22,,Moderate,Yes,Possible,Recovered
+VV-0074,Anaemia,2026-09-08,2026-09-22,Mild,No,Probable,Not Recovered
+VV-0075,Neutropenia,2025-03-14,2025-03-14,Mild,No,Probable,Recovering
+VV-0077,Pyrexia,2026-11-19,2026-11-27,Severe,No,Unlikely,Not Recovered
+VV-0077,Neutropenia,2026-03-28,2026-04-01,Moderate,No,Unlikely,Unknown
+VV-0077,Fatigue,2026-05-14,,Severe,No,Possible,Unknown
+VV-0079,Fatigue,2025-06-13,,Severe,No,Unlikely,Recovering
+VV-0079,Diarrhoea,2025-07-25,,Moderate,No,Possible,Not Recovered
+VV-0079,Nausea,2025-11-04,2025-11-17,Severe,No,Probable,Recovering
+VV-0080,Anaemia,2024-11-30,,Severe,No,Not Related,Unknown
+VV-0080,Rash,2024-04-22,2024-05-01,Moderate,No,Unlikely,Unknown
+VV-0081,Rash,2026-01-11,2026-01-14,Moderate,No,Possible,Recovered
+VV-0081,Anaemia,2026-04-28,2026-05-17,Mild,No,Probable,Recovered
+VV-0081,Headache,2026-04-08,2026-04-25,Moderate,No,Unlikely,Not Recovered
+VV-0082,Anaemia,2026-10-15,2026-10-28,Moderate,No,Unlikely,Unknown
+VV-0083,Neutropenia,2026-11-02,2026-11-08,Moderate,No,Unlikely,Unknown
+VV-0083,Nausea,2026-04-30,2026-05-06,Moderate,No,Not Related,Not Recovered
+VV-0083,Anaemia,2026-06-16,2026-06-19,Severe,No,Probable,Unknown
+VV-0084,Rash,2026-09-10,2026-09-24,Mild,No,Probable,Recovered
+VV-0084,Anaemia,2026-08-05,,Moderate,No,Probable,Recovered
+VV-0085,Rash,2025-04-12,,Mild,No,Probable,Recovering
+VV-0085,Headache,2025-10-09,,Moderate,No,Unlikely,Recovered
+VV-0085,Pyrexia,2026-01-06,,Severe,No,Possible,Recovering
+VV-0086,Nausea,2024-11-27,2024-12-01,Severe,No,Not Related,Recovered
+VV-0086,Fatigue,2025-06-24,,Mild,No,Possible,Recovering
+VV-0089,Anaemia,2026-02-27,,Moderate,No,Probable,Not Recovered
+VV-0089,Rash,2026-05-17,2026-06-05,Moderate,No,Possible,Not Recovered
+VV-0090,Pyrexia,2025-03-22,2025-04-03,Severe,No,Unlikely,Recovered
+VV-0090,Fatigue,2025-09-06,2025-09-25,Severe,No,Probable,Unknown
+VV-0092,Nausea,2024-10-23,,Severe,No,Possible,Recovered
+VV-0093,Fatigue,2025-07-03,2025-07-12,Moderate,No,Unlikely,Recovering
+VV-0094,Anaemia,2025-12-06,2025-12-10,Mild,No,Unlikely,Recovered
+VV-0094,Anaemia,2025-10-07,2025-10-07,Severe,No,Possible,Not Recovered
+VV-0095,Nausea,2024-12-05,2024-12-06,Severe,No,Not Related,Recovered
+VV-0096,Headache,2025-02-19,,Mild,No,Probable,Not Recovered
+VV-0097,Pyrexia,2025-11-18,2025-11-29,Severe,No,Possible,Unknown
+VV-0097,Pyrexia,2025-06-06,,Severe,No,Probable,Recovered
+VV-0098,Diarrhoea,2026-12-27,2027-01-14,Severe,No,Probable,Not Recovered
+VV-0098,Anaemia,2026-12-16,2026-12-16,Severe,No,Unlikely,Not Recovered
+VV-0099,Pyrexia,2026-06-22,2026-06-24,Mild,Yes,Possible,Recovering
+VV-0100,Rash,2026-02-18,2026-03-04,Moderate,No,Not Related,Unknown
+VV-0100,Pyrexia,2025-08-08,,Mild,No,Possible,Recovering
+VV-0101,Headache,2026-03-15,2026-04-04,Moderate,No,Not Related,Unknown
+VV-0101,Headache,2026-04-17,2026-04-17,Severe,No,Not Related,Recovering
+VV-0101,Anaemia,2026-04-19,2026-04-19,Moderate,Yes,Not Related,Not Recovered
+VV-0102,Rash,2025-11-11,2025-11-23,Severe,No,Probable,Unknown
+VV-0102,Anaemia,2025-12-10,2025-12-19,Mild,No,Not Related,Not Recovered
+VV-0102,Anaemia,2025-05-24,2025-06-12,Mild,No,Possible,Recovering
+VV-0103,Fatigue,2026-09-01,2026-09-13,Mild,Yes,Unlikely,Recovering
+VV-0103,Anaemia,2025-12-25,2026-01-09,Moderate,No,Unlikely,Recovered
+VV-0104,Rash,2024-10-31,,Severe,No,Unlikely,Recovered
+VV-0105,Nausea,2026-04-08,2026-04-18,Mild,No,Possible,Not Recovered
+VV-0106,Anaemia,2025-07-01,,Mild,No,Not Related,Recovered
+VV-0106,Diarrhoea,2025-06-08,2025-06-15,Moderate,No,Unlikely,Recovered
+VV-0106,Rash,2025-06-18,2025-06-24,Severe,No,Not Related,Unknown
+VV-0107,Diarrhoea,2026-09-14,2026-09-24,Severe,No,Unlikely,Not Recovered
+VV-0107,Fatigue,2026-08-19,2026-09-03,Severe,Yes,Possible,Recovering
+VV-0107,Neutropenia,2027-02-22,2027-03-05,Moderate,No,Possible,Not Recovered
+VV-0108,Fatigue,2025-08-16,2025-08-25,Mild,No,Probable,Unknown
+VV-0108,Rash,2025-04-05,,Moderate,Yes,Unlikely,Unknown
+VV-0109,Pyrexia,2027-05-09,2027-05-27,Mild,No,Probable,Recovering
+VV-0109,Pyrexia,2026-10-15,,Severe,No,Not Related,Recovering
+VV-0110,Pyrexia,2025-03-27,2025-04-04,Moderate,No,Unlikely,Recovering
+VV-0110,Nausea,2025-05-23,2025-06-11,Mild,No,Not Related,Recovering
+VV-0113,Rash,2025-04-09,,Moderate,Yes,Not Related,Not Recovered
+VV-0114,Rash,2024-08-10,2024-08-11,Mild,No,Not Related,Recovering
+VV-0114,Rash,2025-03-10,,Moderate,No,Probable,Recovering
+VV-0114,Fatigue,2024-11-17,2024-11-27,Severe,Yes,Possible,Unknown
+VV-0119,Pyrexia,2026-02-21,,Severe,No,Probable,Not Recovered
+VV-0120,Nausea,2024-10-16,2024-10-24,Moderate,No,Unlikely,Not Recovered
+VV-0120,Neutropenia,2024-03-27,2024-04-09,Severe,No,Unlikely,Recovered
+VV-0120,Nausea,2024-08-19,2024-09-05,Severe,Yes,Probable,Recovered
+VV-0121,Rash,2024-06-27,2024-06-30,Severe,No,Possible,Recovered
+VV-0122,Neutropenia,2025-11-18,2025-12-05,Moderate,Yes,Probable,Unknown
+VV-0122,Fatigue,2025-09-22,,Moderate,No,Not Related,Unknown
+VV-0123,Rash,2026-05-13,2026-05-31,Mild,No,Unlikely,Unknown
+VV-0123,Neutropenia,2026-12-01,2026-12-21,Moderate,No,Probable,Recovered
+VV-0124,Rash,2026-10-24,2026-10-27,Moderate,No,Possible,Not Recovered
+VV-0124,Headache,2026-10-10,2026-10-15,Moderate,No,Unlikely,Not Recovered
+VV-0124,Anaemia,2026-12-24,2027-01-08,Mild,No,Unlikely,Recovering
+VV-0125,Neutropenia,2025-11-10,2025-11-13,Moderate,No,Not Related,Recovering
+VV-0126,Neutropenia,2024-10-22,2024-10-25,Severe,No,Probable,Unknown
+VV-0126,Diarrhoea,2024-11-18,2024-12-04,Severe,Yes,Unlikely,Recovering
+VV-0130,Neutropenia,2026-03-22,,Severe,No,Unlikely,Not Recovered
+VV-0131,Rash,2025-08-12,2025-08-30,Mild,No,Unlikely,Unknown
+VV-0131,Neutropenia,2025-11-10,2025-11-19,Moderate,No,Possible,Recovered
+VV-0131,Pyrexia,2026-02-03,,Mild,No,Not Related,Recovered
+VV-0132,Diarrhoea,2026-08-16,,Moderate,No,Possible,Recovered
+VV-0133,Neutropenia,2025-09-21,2025-09-28,Moderate,No,Unlikely,Recovering
+VV-0133,Diarrhoea,2026-01-26,,Mild,No,Possible,Recovered
+VV-0135,Rash,2025-06-02,2025-06-18,Severe,No,Probable,Unknown
+VV-0136,Diarrhoea,2025-10-25,2025-11-13,Moderate,No,Possible,Recovered
+VV-0136,Diarrhoea,2026-01-23,2026-02-01,Moderate,Yes,Possible,Not Recovered
+VV-0136,Nausea,2025-05-09,2025-05-20,Severe,No,Unlikely,Recovering
+VV-0138,Rash,2025-11-14,2025-11-15,Mild,No,Possible,Recovered
+VV-0138,Headache,2026-03-07,2026-03-20,Moderate,No,Possible,Recovered
+VV-0139,Fatigue,2025-08-27,2025-09-14,Severe,No,Possible,Recovered
+VV-0139,Diarrhoea,2025-08-03,,Moderate,No,Possible,Unknown
+VV-0139,Headache,2025-12-14,2026-01-02,Severe,No,Probable,Unknown
+VV-0140,Fatigue,2026-07-28,2026-08-08,Severe,No,Possible,Unknown
+VV-0140,Anaemia,2026-07-01,,Moderate,No,Probable,Recovering
+VV-0140,Diarrhoea,2026-06-06,2026-06-06,Moderate,No,Not Related,Unknown
+VV-0141,Neutropenia,2027-01-17,,Moderate,No,Not Related,Recovered
+VV-0143,Pyrexia,2027-02-22,2027-03-08,Severe,No,Not Related,Recovering
+VV-0143,Neutropenia,2026-09-23,2026-09-23,Moderate,No,Possible,Not Recovered
+VV-0144,Anaemia,2026-01-16,,Mild,No,Probable,Recovered
+VV-0144,Neutropenia,2025-11-24,2025-12-03,Mild,No,Not Related,Recovering
+VV-0144,Nausea,2026-04-22,2026-05-10,Severe,No,Unlikely,Recovering
+VV-0145,Fatigue,2025-05-31,2025-06-06,Mild,No,Not Related,Recovering
+VV-0145,Anaemia,2024-12-16,2025-01-03,Moderate,No,Not Related,Not Recovered
+VV-0146,Neutropenia,2024-11-12,,Moderate,No,Possible,Unknown
+VV-0146,Headache,2024-08-26,,Moderate,Yes,Probable,Unknown
+VV-0147,Headache,2026-12-13,2026-12-23,Mild,No,Unlikely,Recovering
+VV-0148,Nausea,2026-07-06,2026-07-17,Moderate,No,Probable,Not Recovered
+VV-0151,Rash,2026-06-16,,Moderate,No,Unlikely,Not Recovered
+VV-0151,Diarrhoea,2026-04-17,2026-05-05,Moderate,No,Probable,Recovered
+VV-0151,Rash,2026-10-02,2026-10-02,Mild,Yes,Possible,Unknown
+VV-0152,Rash,2024-08-25,2024-08-30,Moderate,No,Unlikely,Not Recovered
+VV-0154,Pyrexia,2024-11-12,,Severe,No,Possible,Recovered
+VV-0154,Headache,2025-01-15,,Severe,Yes,Unlikely,Recovering
+VV-0154,Nausea,2025-07-02,,Severe,No,Possible,Not Recovered
+VV-0155,Neutropenia,2026-04-13,2026-04-24,Mild,No,Not Related,Recovered
+VV-0159,Nausea,2026-12-19,,Severe,No,Unlikely,Recovering
+VV-0160,Neutropenia,2025-04-05,,Moderate,No,Probable,Unknown
+VV-0161,Nausea,2025-11-25,,Moderate,No,Possible,Recovered
+VV-0161,Anaemia,2026-03-04,2026-03-09,Moderate,No,Not Related,Recovered
+VV-0162,Rash,2026-06-12,2026-06-30,Severe,No,Probable,Recovered
+VV-0162,Fatigue,2025-10-23,2025-11-12,Severe,No,Unlikely,Not Recovered
+VV-0162,Rash,2026-06-22,2026-07-11,Moderate,No,Not Related,Not Recovered
+VV-0163,Headache,2025-04-20,,Moderate,No,Possible,Not Recovered
+VV-0163,Neutropenia,2025-06-29,,Moderate,No,Not Related,Recovered
+VV-0164,Rash,2025-01-03,2025-01-07,Mild,No,Possible,Recovered
+VV-0164,Anaemia,2024-09-18,,Mild,No,Unlikely,Not Recovered
+VV-0165,Diarrhoea,2026-08-12,2026-08-19,Severe,No,Unlikely,Not Recovered
+VV-0165,Headache,2026-06-10,,Mild,No,Probable,Not Recovered
+VV-0165,Neutropenia,2026-03-29,,Severe,No,Unlikely,Unknown
+VV-0166,Pyrexia,2024-05-19,2024-05-28,Moderate,No,Probable,Recovering
+VV-0166,Diarrhoea,2024-11-01,,Mild,No,Not Related,Not Recovered
+VV-0166,Fatigue,2024-03-31,,Severe,Yes,Probable,Recovering
+VV-0167,Nausea,2025-10-21,,Severe,Yes,Possible,Recovered
+VV-0167,Nausea,2026-01-05,2026-01-21,Mild,No,Possible,Recovered
